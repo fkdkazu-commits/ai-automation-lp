@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css"></head>
+<body style="--m:#7458c8;--m-dark:#5a44a8;--m-deep:#503a94;--m-mid:#a08fe0;--m-soft:#ded7f6;--m-pale:#f0ecfb;--m-rgb:116,88,200">
+<nav class="side">
+  <div class="side-logo"><i>人</i><b>人流スコープ</b></div>
+  <div class="side-sec">ANALYSIS</div>
+  <a><s></s>エリア密集マップ</a>
+  <a><s></s>来訪推移</a>
+  <a class="on"><s></s>実勢商圏</a>
+  <a><s></s>競合比較</a>
+  <a><s></s>通行量マップ</a>
+  <div class="side-sec">MANAGE</div>
+  <a><s></s>分析地点（POI）</a>
+  <a><s></s>レポート</a>
+  <a><s></s>設定</a>
+  <div class="side-foot">データ更新<br>2026-08-14 06:12</div>
+</nav>
+
+<div class="main">
+  <div class="top">
+    <div class="crumb">実勢商圏 ／ <b>横浜駅前店</b></div>
+    <div class="top-r"><span class="pill">居住地ベース</span><span class="pill">CSV出力</span><span class="avatar"></span></div>
+  </div>
+
+  <div class="body">
+    <div class="filters">
+      <span class="f act">集計単位 <b>町丁目</b></span>
+      <span class="f">期間 <b>直近12か月</b></span>
+      <span class="f">来訪頻度 <b>月2回以上</b></span>
+      <span class="f">競合を重ねる</span>
+      <span class="btn-s">分析を実行</span>
+    </div>
+
+    <div class="row" style="flex:1;min-height:0;">
+      <div class="panel" style="flex:1.5;">
+        <div class="panel-h"><h3>来訪率分布（居住地ベース）</h3><span>濃いほど当店の利用率が高い</span></div>
+        <div class="panel-b" style="display:flex;">
+          <div class="map">
+            <svg viewBox="0 0 560 380" preserveAspectRatio="none">
+              <rect width="560" height="380" fill="#e7edf2"/>
+              <path d="M0 300 Q90 268 180 292 T400 262 T560 288 L560 380 L0 380 Z" fill="#d3e2ee"/>
+              <g fill="#503a94" opacity=".55"><polygon points="230,150 300,140 318,196 250,208"/></g>
+              <g fill="#7458c8" opacity=".46">
+                <polygon points="300,140 372,132 386,190 318,196"/>
+                <polygon points="250,208 318,196 330,250 262,258"/>
+              </g>
+              <g fill="#a08fe0" opacity=".44">
+                <polygon points="170,158 230,150 250,208 186,214"/>
+                <polygon points="372,132 440,126 452,182 386,190"/>
+                <polygon points="318,196 386,190 398,244 330,250"/>
+              </g>
+              <g fill="#c5b9ee" opacity=".46">
+                <polygon points="110,166 170,158 186,214 124,220"/>
+                <polygon points="440,126 500,120 512,176 452,182"/>
+                <polygon points="186,214 250,208 262,258 198,264"/>
+                <polygon points="262,72 330,66 342,132 274,138"/>
+              </g>
+              <g fill="#f4f1fd" opacity=".7">
+                <polygon points="44,174 110,166 124,220 58,226"/>
+                <polygon points="500,120 556,116 560,172 512,176"/>
+                <polygon points="330,66 400,60 412,128 342,132"/>
+                <polygon points="124,220 186,214 198,264 136,270"/>
+              </g>
+              <g stroke="#fff" stroke-width="1.4" fill="none" opacity=".75">
+                <path d="M230 150 L300 140 L372 132 L440 126 L500 120 M250 208 L318 196 L386 190 L452 182 M262 258 L330 250 L398 244 M170 158 L186 214 L198 264 M110 166 L124 220 L136 270"/>
+              </g>
+              <circle cx="292" cy="176" r="8" fill="#0f2338"/>
+              <circle cx="292" cy="176" r="17" fill="none" stroke="#0f2338" stroke-width="2" opacity=".4"/>
+              <circle cx="420" cy="216" r="6" fill="#c8a35a"/>
+            </svg>
+            <div class="tag" style="left:300px;top:150px;">横浜駅前店</div>
+            <div class="tag" style="left:428px;top:190px;color:#a37c2c;">競合A</div>
+            <div class="lg"><i></i>来訪率 低 → 高</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1;">
+        <div class="panel" style="flex:1.1;">
+          <div class="panel-h"><h3>居住地別 来訪者数</h3><span>上位6町丁目</span></div>
+          <div class="panel-b">
+            <table>
+              <tr><th>町丁目</th><th style="text-align:right">来訪者</th><th style="text-align:right">来訪率</th></tr>
+              <tr><td>西区南幸1丁目</td><td class="n">1,840</td><td class="n up">12.4%</td></tr>
+              <tr><td>西区北幸2丁目</td><td class="n">1,510</td><td class="n up">10.8%</td></tr>
+              <tr><td>神奈川区鶴屋町</td><td class="n">1,180</td><td class="n">8.1%</td></tr>
+              <tr><td>西区平沼1丁目</td><td class="n">960</td><td class="n">6.6%</td></tr>
+              <tr><td>中区花咲町</td><td class="n">720</td><td class="n">4.9%</td></tr>
+              <tr><td>保土ケ谷区岩間町</td><td class="n">540</td><td class="n">3.2%</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel" style="height:172px;">
+          <div class="panel-h"><h3>競合との併用率</h3><span>当店来訪者のうち</span></div>
+          <div class="panel-b" style="display:flex;flex-direction:column;justify-content:center;gap:11px;">
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>競合A も利用</span><b>28.4%</b></div><span class="mini" style="width:57%"></span></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>競合B も利用</span><b>19.1%</b></div><span class="mini" style="width:38%"></span></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span>当店のみ</span><b>52.5%</b></div><span class="mini" style="width:100%;background:#503a94"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

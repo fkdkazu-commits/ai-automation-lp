@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css"></head>
+<body style="--m:#2f6fd0;--m-dark:#1e4e9c;--m-deep:#1a4488;--m-mid:#6d9ee6;--m-soft:#cfe0f9;--m-pale:#e8f0fc;--m-rgb:47,111,208">
+<nav class="side">
+  <div class="side-logo"><i>人</i><b>人流スコープ</b></div>
+  <div class="side-sec">ANALYSIS</div>
+  <a class="on"><s></s>エリア密集マップ</a>
+  <a><s></s>来訪推移</a>
+  <a><s></s>実勢商圏</a>
+  <a><s></s>競合比較</a>
+  <a><s></s>通行量マップ</a>
+  <div class="side-sec">MANAGE</div>
+  <a><s></s>分析地点（POI）</a>
+  <a><s></s>レポート</a>
+  <a><s></s>設定</a>
+  <div class="side-foot">データ更新<br>2026-08-14 06:12</div>
+</nav>
+
+<div class="main">
+  <div class="top">
+    <div class="crumb">エリア密集マップ ／ <b>渋谷駅 半径500m</b></div>
+    <div class="top-r"><span class="pill g">前日まで反映</span><span class="pill">CSV出力</span><span class="avatar"></span></div>
+  </div>
+
+  <div class="body">
+    <div class="filters">
+      <span class="f act">期間 <b>2026/07/15 – 08/14</b></span>
+      <span class="f">時間帯 <b>全時間</b></span>
+      <span class="f">曜日 <b>平日のみ</b></span>
+      <span class="f">通行人を除外</span>
+      <span class="btn-s">分析を実行</span>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="k">推計来訪数</div><div class="v">18,420<small>人/日</small></div><div class="d up">▲ 6.2% 前月比</div></div>
+      <div class="kpi"><div class="k">平均滞在時間</div><div class="v">42<small>分</small></div><div class="d up">▲ 3分</div></div>
+      <div class="kpi"><div class="k">新規来訪率</div><div class="v">31.8<small>%</small></div><div class="d dn">▼ 1.4pt</div></div>
+      <div class="kpi"><div class="k">ピーク時間帯</div><div class="v">18<small>時台</small></div><div class="d">2,940人</div></div>
+    </div>
+
+    <div class="row" style="flex:1;min-height:0;">
+      <div class="panel" style="flex:1.75;">
+        <div class="panel-h"><h3>メッシュ別 来訪密度（125mメッシュ）</h3><span>2026/07/15 – 08/14 平日</span></div>
+        <div class="panel-b" style="display:flex;">
+          <div class="map">
+            <svg viewBox="0 0 620 380" preserveAspectRatio="none">
+              <rect width="620" height="380" fill="#e7edf2"/>
+              <g stroke="#d3dde6" stroke-width="9" fill="none" stroke-linecap="round">
+                <path d="M-10 128 H630"/><path d="M-10 268 H630"/>
+                <path d="M148 -10 V390"/><path d="M392 -10 V390"/>
+                <path d="M60 390 L300 128"/>
+              </g>
+              <g stroke="#c3d0db" stroke-width="1.2" fill="none">
+                <path d="M0 60 H620 M0 196 H620 M0 330 H620 M70 0 V380 M232 0 V380 M310 0 V380 M470 0 V380 M545 0 V380"/>
+              </g>
+              <g stroke="#b9c8d5" stroke-width="1" fill="none" opacity=".8">
+                <rect x="188" y="150" width="66" height="46"/><rect x="330" y="70" width="52" height="40"/>
+                <rect x="430" y="215" width="72" height="52"/><rect x="90" y="255" width="46" height="38"/>
+              </g>
+              <g>
+                <rect x="248" y="128" width="144" height="140" fill="#1a4488" opacity=".62"/>
+                <rect x="186" y="128" width="62" height="140" fill="#2f6fd0" opacity=".5"/>
+                <rect x="392" y="128" width="78" height="140" fill="#2f6fd0" opacity=".44"/>
+                <rect x="248" y="60" width="144" height="68" fill="#6d9ee6" opacity=".5"/>
+                <rect x="248" y="268" width="144" height="62" fill="#6d9ee6" opacity=".42"/>
+                <rect x="70" y="128" width="116" height="140" fill="#a8c6f2" opacity=".45"/>
+                <rect x="470" y="128" width="75" height="140" fill="#a8c6f2" opacity=".4"/>
+                <rect x="186" y="268" width="62" height="62" fill="#cfe0f9" opacity=".7"/>
+                <rect x="392" y="60" width="78" height="68" fill="#cfe0f9" opacity=".7"/>
+                <rect x="70" y="268" width="116" height="62" fill="#eff5fe" opacity=".8"/>
+                <rect x="470" y="60" width="75" height="68" fill="#eff5fe" opacity=".8"/>
+              </g>
+              <circle cx="320" cy="198" r="7" fill="#0f2338"/>
+              <circle cx="320" cy="198" r="15" fill="none" stroke="#0f2338" stroke-width="2" opacity=".45"/>
+            </svg>
+            <div class="tag" style="left:330px;top:172px;">渋谷駅<br><span style="color:#2f6fd0;">4,180人/日</span></div>
+            <div class="tag" style="left:150px;top:262px;">道玄坂上<br><span style="color:#8b9bab;">1,260人/日</span></div>
+            <div class="lg"><i></i>来訪密度 低 → 高</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1;">
+        <div class="panel" style="flex:1;">
+          <div class="panel-h"><h3>メッシュ別 上位</h3><span>来訪数</span></div>
+          <div class="panel-b">
+            <table>
+              <tr><th>メッシュ</th><th style="text-align:right">来訪数</th><th style="width:66px"></th></tr>
+              <tr><td>渋谷2丁目 A-14</td><td class="n">4,180</td><td><span class="mini" style="width:100%"></span></td></tr>
+              <tr><td>道玄坂1丁目 B-07</td><td class="n">3,020</td><td><span class="mini" style="width:72%"></span></td></tr>
+              <tr><td>宇田川町 B-11</td><td class="n">2,640</td><td><span class="mini" style="width:63%"></span></td></tr>
+              <tr><td>桜丘町 C-03</td><td class="n">1,910</td><td><span class="mini" style="width:46%"></span></td></tr>
+              <tr><td>神南1丁目 A-22</td><td class="n">1,260</td><td><span class="mini" style="width:30%"></span></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel" style="height:150px;">
+          <div class="panel-h"><h3>時間帯別 来訪</h3><span>平日平均</span></div>
+          <div class="panel-b" style="display:flex;flex-direction:column;">
+            <div class="bars">
+              <i class="pale" style="height:14%"></i><i class="pale" style="height:22%"></i><i style="height:38%"></i><i style="height:46%"></i>
+              <i style="height:54%"></i><i style="height:49%"></i><i style="height:62%"></i><i style="height:78%"></i>
+              <i style="height:100%"></i><i style="height:86%"></i><i style="height:58%"></i><i class="pale" style="height:26%"></i>
+            </div>
+            <div class="xlab"><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span><span>22</span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

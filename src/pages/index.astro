@@ -1,0 +1,826 @@
+---
+// pro-lp-builder テンプレート由来の共通デザインシステム（カラートークン・タイポ・
+// ボタン・カード・レスポンシブ）。ページ固有の指定は下部の <style> に書くこと
+// （スコープ付きスタイルは属性セレクタ分だけ詳細度が高く、必ずこちらに勝つ）。
+import '../styles/lp-base.css';
+
+// ─────────────────────────────────────────────────────────────
+// 公開URLはここ1か所だけ変更すれば canonical / OGP / JSON-LD に反映されます。
+// 独自ドメイン確定後は astro.config.mjs の site と vercel.json の Link ヘッダも合わせてください。
+// ─────────────────────────────────────────────────────────────
+const SITE_URL = 'https://ai-automation-lp.vercel.app';
+const X_URL = 'https://x.com/Marketer_kazuf';
+const X_HANDLE = '@Marketer_kazuf';
+const MAIL = 'fkdkazu@gmail.com';
+// 問い合わせ導線（既存GitHub Pages側のフォームページ）
+const CONTACT_URL = 'https://fkdkazu-commits.github.io/ai-consulting-lp/contact.html';
+
+const TITLE = 'AI業務自動化支援｜福田和弘 — Claude Code × AWS で、御社の生産性を変える';
+const DESC = 'ITマネジメント20年以上の経験を持つAI業務自動化の専門家。Claude Codeで自動化ツールを設計・実装し、AWSで社内展開まで一貫サポート。10,000円〜。';
+
+const FAQS = [
+  ['開発の知識がなくても依頼できますか？', 'はい、問題ありません。業務の課題や「こんなことを自動化したい」というご要望をお聞きするところから始めます。技術的な知識は一切不要です。'],
+  ['どんな業種でも対応できますか？', 'はい、業種は問いません。採用・HR、マーケティング、問い合わせ対応、レポート作成など、繰り返し発生する業務であれば幅広く対応可能です。'],
+  ['納期はどのくらいですか？', 'ご支援メニューによって異なります。スポット開発支援は内容確定後おおよそ1週間〜、業務委託支援は契約開始後すぐに着手、DXスターターパックは要件確定から数か月規模が目安です。内容によって変動しますので、まずはご相談ください。'],
+  ['導入後のサポートはありますか？', 'あります。スポット開発でも操作マニュアルをお渡しします。継続的な改善・運用相談が必要な場合は、月額の業務委託支援（AIエンジニア＋AI顧問）でそのまま伴走します。'],
+  ['外部APIの費用はどのくらいかかりますか？', 'Claude API（Anthropic）やその他APIの利用料は別途実費となります。利用量によりますが、一般的な業務利用では月数百〜数千円程度が目安です。事前にご説明します。'],
+  ['Claude Codeなどでツールを作ったあと、どうやって社内展開すればよいですか？', '自分のPC上で動くツールをチーム全体で使えるようにするには、AWSへの移行・構築が有効です。処理規模や用途に応じて最適な構成をご提案しますので、まずは現状のツール内容をお聞かせください。セキュリティ設定・運用コストの見直しも含めてサポートします。'],
+  ['まず相談だけでも大丈夫ですか？', 'もちろんです。「自動化できるかどうかわからない」という段階でも歓迎です。XのDMかメールでお気軽にご連絡ください。'],
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${SITE_URL}/#person`,
+      name: '福田 和弘',
+      alternateName: 'Kazuhiro Fukuda',
+      url: `${SITE_URL}/`,
+      image: `${SITE_URL}/images/profile.png`,
+      jobTitle: 'AI業務自動化コンサルタント / AI顧問',
+      email: MAIL,
+      knowsAbout: ['Claude Code', 'AWS', '業務自動化', 'DX推進', 'SEO', 'Power Automate', 'Copilot Studio'],
+      sameAs: [X_URL],
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${SITE_URL}/#service`,
+      name: 'AI業務自動化支援（福田和弘）',
+      url: `${SITE_URL}/`,
+      image: `${SITE_URL}/ogp.png`,
+      description: DESC,
+      areaServed: 'JP',
+      priceRange: '¥10,000〜',
+      founder: { '@id': `${SITE_URL}/#person` },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'ご支援サービス',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Claude Code スポット開発支援' }, priceCurrency: 'JPY', price: '10000' },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Claude Code 業務委託支援' }, priceCurrency: 'JPY', price: '50000' },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '中小企業向け DXスターターパック' }, priceCurrency: 'JPY', price: '650000' },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Claude Code 個別家庭教師' }, priceCurrency: 'JPY', price: '3000' },
+        ],
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: 'AI業務自動化支援｜福田和弘',
+      inLanguage: 'ja',
+      publisher: { '@id': `${SITE_URL}/#person` },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQS.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    },
+  ],
+};
+---
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#1a1714">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="福田 和弘">
+<meta name="keywords" content="AI業務自動化,Claude Code,Claude Code 開発代行,AI顧問,業務効率化,DX推進,中小企業 DX,AWS,SEO自動化,福田和弘">
+<link rel="canonical" href={`${SITE_URL}/`}>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>{TITLE}</title>
+<meta name="description" content={DESC}>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI業務自動化支援｜福田和弘">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content={`${SITE_URL}/`}>
+<meta property="og:title" content={TITLE}>
+<meta property="og:description" content={DESC}>
+<meta property="og:image" content={`${SITE_URL}/ogp.png`}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="AI業務自動化支援 福田和弘 — Claude Code × AWS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content={X_HANDLE}>
+<meta name="twitter:creator" content={X_HANDLE}>
+<meta name="twitter:title" content={TITLE}>
+<meta name="twitter:description" content={DESC}>
+<meta name="twitter:image" content={`${SITE_URL}/ogp.png`}>
+<meta name="twitter:image:alt" content="AI業務自動化支援 福田和弘 — Claude Code × AWS">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="/images/marketing-dashboard-sample.png" type="image/png" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+<style>
+/* ═══ このLP固有の追加スタイル（テンプレ共通トークンを利用） ═══ */
+
+/* Brand mark（ロゴ画像を持たないためテキスト＋モノグラムで構成） */
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#d4622a,#e8844e);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;letter-spacing:-.02em;flex-shrink:0;box-shadow:0 4px 12px rgba(212,98,42,.28);}
+.brand-text{font-weight:800;font-size:13px;letter-spacing:.02em;color:var(--ink);white-space:nowrap;}
+.brand-text b{font-weight:900;}
+
+/* Ticker（導入実績アプリ名の2段マーキー） */
+.ticker-wrap.ticker-2row{padding:0;}
+.ticker-row{display:flex;overflow:hidden;padding:11px 0;white-space:nowrap;}
+.ticker-row + .ticker-row{border-top:1px solid var(--border);}
+.ticker-row .ticker{animation-duration:42s;}
+.ticker-row.rev .ticker{animation-direction:reverse;animation-duration:52s;}
+.ticker span{display:inline-flex;align-items:center;gap:8px;}
+.ticker span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+
+/* Stats 4カラム */
+.stats.stats-4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:900px){.stats.stats-4{grid-template-columns:repeat(2,1fr);}}
+
+/* Problem */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;}
+.pain-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px 26px;display:flex;gap:16px;align-items:flex-start;box-shadow:var(--shadow-sm);transition:all .3s cubic-bezier(.16,1,.3,1);}
+.pain-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:rgba(212,98,42,.3);}
+.pain-icon{font-size:26px;line-height:1;flex-shrink:0;margin-top:2px;}
+.pain-t{font-size:15px;font-weight:800;color:var(--ink);line-height:1.6;}
+.pain-t span{display:block;font-size:12.5px;font-weight:400;color:var(--muted);margin-top:6px;line-height:1.75;}
+.pain-resolve{margin-top:36px;background:var(--accent-soft);border:1px solid rgba(212,98,42,.18);border-radius:var(--radius-lg);padding:28px 36px;text-align:center;}
+.pain-resolve p{font-size:clamp(16px,2.2vw,20px);font-weight:900;color:var(--ink);line-height:1.7;}
+.pain-resolve em{font-style:normal;color:var(--accent);}
+@media(max-width:900px){.pain-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.pain-grid{grid-template-columns:1fr;gap:12px;}.pain-card{padding:18px 20px;}.pain-resolve{padding:22px 20px;}}
+
+/* Features（選ばれる3つの理由） */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px;}
+.feat-card{position:relative;overflow:hidden;border:1px solid var(--border);border-radius:18px;padding:34px 30px;background:#fff;transition:all .3s cubic-bezier(.16,1,.3,1);}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent-light));}
+.feat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.feat-n{font-size:40px;font-weight:900;color:var(--accent-soft);line-height:1;margin-bottom:6px;letter-spacing:-.03em;}
+.feat-card h3{font-size:19px;font-weight:900;line-height:1.45;margin-bottom:12px;letter-spacing:-.01em;}
+.feat-card p{font-size:13.5px;color:var(--muted);line-height:1.95;}
+@media(max-width:900px){.feat-grid{grid-template-columns:1fr;}}
+
+/* Services（価格バッジ＋チェックリスト） */
+.svc-price{font-size:12.5px;font-weight:800;padding:6px 14px;border-radius:100px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
+.svc-card--dark .svc-price{background:rgba(232,132,78,.16);color:#e8a472;}
+.svc-card .ck{margin:18px 0 22px;}
+.svc-card--dark .ck li{color:rgba(255,255,255,.72);}
+.svc-card--dark .ck li::before{color:#e8844e;}
+.svc-foot{margin-top:34px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;font-size:14px;color:var(--muted);line-height:1.95;text-align:center;}
+.svc-foot a{color:var(--accent);font-weight:800;border-bottom:1.5px solid rgba(212,98,42,.3);}
+
+/* Showcase（導入実績・事例） */
+.sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;}
+.sc-card{display:block;background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:all .3s cubic-bezier(.16,1,.3,1);text-decoration:none;color:inherit;}
+.sc-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--border2);}
+.sc-thumb{aspect-ratio:16/9;overflow:hidden;background:var(--bg2);}
+.sc-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease;}
+.sc-card:hover .sc-thumb img{transform:scale(1.04);}
+.sc-thumb--ph{display:flex;flex-direction:column;justify-content:center;padding:22px 24px;color:#fff;position:relative;}
+.sc-thumb--ph::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1px);background-size:14px 14px;opacity:.5;}
+.sc-thumb--ph span{position:relative;z-index:1;font-size:clamp(16px,2.2vw,20px);font-weight:900;line-height:1.45;letter-spacing:-.01em;text-shadow:0 2px 12px rgba(0,0,0,.25);}
+.ph-warm{background:linear-gradient(135deg,#1a1714 0%,#7a3a1c 55%,#d4622a 100%);}
+.ph-teal{background:linear-gradient(135deg,#134e4a 0%,#0f766e 55%,#14b8a6 100%);}
+.sc-body{padding:18px 20px 20px;}
+.sc-cat{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 11px;border-radius:100px;margin-bottom:10px;}
+.sc-title{font-size:14.5px;font-weight:800;line-height:1.55;margin-bottom:8px;color:var(--ink);}
+.sc-desc{font-size:12.5px;color:var(--muted);line-height:1.8;margin-bottom:12px;}
+.sc-metric{font-size:13px;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:6px;}
+.sc-metric::before{content:'';width:14px;height:2px;background:var(--accent);display:inline-block;flex-shrink:0;}
+.sc-more{text-align:center;margin-top:40px;}
+@media(max-width:880px){.sc-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.sc-grid{grid-template-columns:1fr;}}
+
+/* News */
+.news-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:34px;}
+.news-more{display:inline-flex;align-items:center;gap:14px;background:none;border:0;padding:0;cursor:pointer;font-family:inherit;font-size:13px;font-weight:800;color:var(--ink);}
+.news-more-circle{width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;transition:background .25s,transform .25s;}
+.news-more:hover .news-more-circle{background:var(--accent);}
+.news-more.is-open .news-more-circle{transform:rotate(-90deg);}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:32px 24px;}
+.news-card{display:block;text-decoration:none;color:inherit;}
+.news-card.is-hidden{display:none;}
+.news-thumb-img{width:100%;height:auto;aspect-ratio:720/514;object-fit:cover;border-radius:10px;display:block;background:var(--bg2);transition:opacity .2s;}
+.news-card:hover .news-thumb-img{opacity:.92;}
+.news-thumb{position:relative;aspect-ratio:720/514;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:20px 24px;color:#fff;}
+.news-thumb::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1px);background-size:14px 14px;opacity:.55;}
+.news-thumb-tag{position:relative;z-index:1;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);margin-bottom:12px;}
+.news-thumb-text{position:relative;z-index:1;font-size:clamp(17px,2.2vw,21px);font-weight:900;line-height:1.45;letter-spacing:-.01em;text-shadow:0 2px 12px rgba(0,0,0,.25);}
+.news-thumb--case{background:linear-gradient(135deg,#1a1714 0%,#7a3a1c 55%,#d4622a 100%);}
+.news-thumb--new{background:linear-gradient(135deg,#7c2d12 0%,#b45309 55%,#dd6b20 100%);}
+.news-card-date{display:block;font-size:12.5px;color:var(--muted2);font-weight:700;margin:16px 0 6px;letter-spacing:.02em;}
+.news-card-title{font-size:15px;font-weight:700;line-height:1.7;color:var(--ink);transition:color .2s;}
+.news-card:hover .news-card-title{color:var(--accent);}
+@media(max-width:600px){.news-grid{grid-template-columns:1fr;gap:26px;}}
+
+/* Profile（ダークバンド） */
+.prof-band{background:linear-gradient(180deg,var(--deep) 0%,var(--deep2) 100%);color:#fff;padding:88px 0;}
+.prof-grid{display:grid;grid-template-columns:280px 1fr;gap:56px;align-items:center;}
+.prof-avatar{width:260px;height:260px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,.12);box-shadow:0 30px 70px rgba(0,0,0,.45);margin:0 auto;}
+.prof-avatar img{width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+.prof-name{font-size:30px;font-weight:900;letter-spacing:-.02em;}
+.prof-role{font-size:13px;color:var(--claude);font-weight:700;margin-top:8px;letter-spacing:.02em;}
+.prof-bio{font-size:14.5px;color:rgba(255,255,255,.72);line-height:2;margin-top:20px;}
+.prof-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+.prof-tags span{font-size:11.5px;font-weight:700;color:#f3b483;background:rgba(232,132,78,.12);border:1px solid rgba(232,132,78,.25);padding:5px 13px;border-radius:100px;}
+.prof-link{display:inline-flex;align-items:center;gap:6px;margin-top:26px;font-size:13.5px;font-weight:800;color:#fff;border-bottom:2px solid rgba(232,132,78,.5);padding-bottom:3px;transition:all .2s;}
+.prof-link:hover{color:var(--claude);border-color:var(--claude);}
+@media(max-width:900px){.prof-grid{grid-template-columns:1fr;gap:32px;text-align:center;}.prof-tags{justify-content:center;}.prof-avatar{width:200px;height:200px;}.prof-band{padding:56px 0;}}
+
+/* CTA 内のセカンダリボタン（ダーク） */
+.btn-x{background:#000;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.btn-x:hover{background:#222;transform:translateY(-1px);}
+</style>
+
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav"><div class="w">
+  <a href="#top" class="nav-brand">
+    <span class="brand-mark">F</span>
+    <span class="brand-text">福田和弘 <b>| AI業務自動化</b></span>
+  </a>
+  <div class="nav-links">
+    <a href="#services">サービス</a>
+    <a href="#usecases">活用事例</a>
+    <a href="#results">導入実績</a>
+    <a href="#profile">プロフィール</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href={CONTACT_URL} class="btn btn-dark">無料相談・お問合せ &rarr;</a>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero" id="top"><div class="w">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag">AI業務自動化支援 &mdash; Claude Code &times; 業務設計</div>
+      <h1>業務の無駄を削ぎ落とし、<br><em>AIが働く仕組み</em>をつくる。</h1>
+      <p class="hero-sub"><strong>ITマネジメント20年以上</strong>の経験をもとに、貴社の業務課題を整理し、Claude Codeで自動化ツールを設計・実装。<strong>AWSをはじめ、さまざまな環境で使える状態</strong>まで、一貫して対応します。</p>
+      <div class="hero-actions">
+        <a href={X_URL} target="_blank" rel="noopener noreferrer" class="btn btn-gradient" style="font-size:15.5px;padding:15px 32px;">𝕏 まずは気軽に相談する</a>
+        <a href={CONTACT_URL} class="btn btn-outline" style="font-size:15.5px;padding:15px 32px;">✉ まずは無料相談</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>SEO記事制作コスト 約80%削減</div>
+        <div class="hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>ITマネジメント20年以上</div>
+        <div class="hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>自社・支援先への導入 20本以上</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="/images/marketing-dashboard-sample.png" alt="AIが商談メモを解析し、5軸診断と改善提案を自動生成するマーケティングAIダッシュボードの画面" fetchpriority="high" decoding="async" width="1536" height="1024">
+      <div class="hero-badge hb1"><div class="num">80%</div><div class="lbl">SEO記事制作コスト削減</div></div>
+      <div class="hero-badge hb2"><div class="num">20年+</div><div class="lbl">ITマネジメント経験</div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- TICKER: 導入実績アプリ一覧 -->
+<div class="ticker-wrap ticker-2row">
+  <div class="ticker-row">
+    <div class="ticker">
+      <span>採用支援AI — 求人票・スカウト文 自動生成</span><span>スクリーニング 自動採点AI</span><span>面談メモ AI構造化</span><span>請求書管理システム — AWS × Claude Vision</span><span>内部リンク構築AIエージェント</span><span>SEO記事自動化パイプライン</span><span>顧客育成ジャーニー設計AI</span><span>Gmail × LINE 自動連携</span>
+      <span>採用支援AI — 求人票・スカウト文 自動生成</span><span>スクリーニング 自動採点AI</span><span>面談メモ AI構造化</span><span>請求書管理システム — AWS × Claude Vision</span><span>内部リンク構築AIエージェント</span><span>SEO記事自動化パイプライン</span><span>顧客育成ジャーニー設計AI</span><span>Gmail × LINE 自動連携</span>
+    </div>
+  </div>
+  <div class="ticker-row rev">
+    <div class="ticker">
+      <span>GSCカニバリゼーション分析ツール</span><span>Gmail → カレンダー 自動登録</span><span>SNS投稿 自動生成ツール</span><span>会社経営 AI役員チーム</span><span>DXスターターパック — FAX・Excel業務のシステム化</span><span>Claude Code × AWS Lambda チーム展開</span><span>YouTube 動画収集・分析ツール</span><span>ハンズフリーAI開発チーム（UNIA）</span>
+      <span>GSCカニバリゼーション分析ツール</span><span>Gmail → カレンダー 自動登録</span><span>SNS投稿 自動生成ツール</span><span>会社経営 AI役員チーム</span><span>DXスターターパック — FAX・Excel業務のシステム化</span><span>Claude Code × AWS Lambda チーム展開</span><span>YouTube 動画収集・分析ツール</span><span>ハンズフリーAI開発チーム（UNIA）</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<section class="sec"><div class="w">
+  <div class="stats-hero rv">
+    <div class="stats-badge">
+      <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4L12 16.8 5.7 21.4 8 14 2 9.4h7.6z"/></svg>
+      自社で<span class="no1">実運用中</span>の仕組みを提供
+    </div>
+    <div class="stats-sub">中小企業・個人事業主を中心に、現場で回る自動化を実装</div>
+    <div class="stats-note">※ 2026年8月時点</div>
+  </div>
+  <div class="stats stats-4">
+    <div class="rv"><div class="stat-n">20<span class="stat-u">年+</span></div><div class="stat-l">ITマネジメント経験</div></div>
+    <div class="rv"><div class="stat-n">80<span class="stat-u">%</span></div><div class="stat-l">SEO記事制作コスト削減</div></div>
+    <div class="rv"><div class="stat-n">20<span class="stat-u">本+</span></div><div class="stat-l">自社・支援先への導入実績</div></div>
+    <div class="rv"><div class="stat-n">1<span class="stat-u">万円〜</span></div><div class="stat-l">ご支援のスタート価格</div></div>
+  </div>
+</div></section>
+
+<!-- PROBLEM -->
+<section class="sec" id="problem" style="background:var(--bg2);"><div class="w">
+  <div class="sec-label rv">Problem</div>
+  <h2 class="rv">こんなお悩みはありませんか？</h2>
+  <p class="lead rv">AI活用に興味はあるものの、何から手をつければいいかわからない——そんな声を多くいただきます。</p>
+
+  <div class="pain-grid">
+    <div class="pain-card rv"><div class="pain-icon">🤔</div><div class="pain-t">AIを導入したいが<br>具体的な進め方がわからない<span>どのツールを使えばいいのか、社内に知見がない</span></div></div>
+    <div class="pain-card rv"><div class="pain-icon">⏰</div><div class="pain-t">繰り返し作業に<br>毎日時間を取られている<span>報告書作成・問い合わせ対応・データ整理など</span></div></div>
+    <div class="pain-card rv"><div class="pain-icon">👤</div><div class="pain-t">業務が特定の人に<br>依存・属人化している<span>担当者が休むと業務が止まる、引き継ぎが困難</span></div></div>
+    <div class="pain-card rv"><div class="pain-icon">💸</div><div class="pain-t">外注すると高額になり<br>費用対効果が見えない<span>大手ベンダーへの依頼は予算・スピード面でハードルが高い</span></div></div>
+    <div class="pain-card rv"><div class="pain-icon">🖥️</div><div class="pain-t">ツールは作ったが<br>社内展開の方法がわからない<span>自分のPCでは動くが、チーム全員が使える環境にできない</span></div></div>
+    <div class="pain-card rv"><div class="pain-icon">📉</div><div class="pain-t">人手不足で対応工数が<br>限界に近づいている<span>採用も難しく、今いるメンバーの負荷が増す一方</span></div></div>
+  </div>
+
+  <div class="pain-resolve rv">
+    <p>それらの課題を、<em>AIを使った業務設計と自動化ツール</em>でまとめて解決します。</p>
+  </div>
+</div></section>
+
+<!-- FEATURES -->
+<section class="sec" id="features"><div class="w">
+  <div class="sec-label rv">Features</div>
+  <h2 class="rv">選ばれる3つの理由</h2>
+  <p class="lead rv">単なるツール制作ではなく、<strong>Claude Code × AWS で業務全体が回る仕組み</strong>として設計・実装します。</p>
+
+  <div class="feat-grid">
+    <div class="feat-card rv">
+      <div class="feat-n">01</div>
+      <h3>業務設計から<br>一貫して対応</h3>
+      <p>「何を自動化すべきか」の整理から始め、設計・実装・AWS構築・運用定着まで一人で担当。複数の業者に依頼する手間がありません。ITマネジメント20年以上の経験で、業務全体の最適解を提案します。</p>
+    </div>
+    <div class="feat-card rv">
+      <div class="feat-n">02</div>
+      <h3>中小企業・個人事業主に<br>最適化した価格設計</h3>
+      <p>1万円〜の明確な料金体系で、はじめやすい設計になっています。大手ベンダーに依頼するより大幅にコストを抑えながら、実務レベルの自動化ツールを構築できます。</p>
+    </div>
+    <div class="feat-card rv">
+      <div class="feat-n">03</div>
+      <h3>自社で実運用している<br>仕組みを提供</h3>
+      <p>提案するすべてのツールは、自社業務で実際に使い続けているものをベースにしています。デモだけで終わらない、AWSで本番稼働する実用的なシステムをお届けします。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- SERVICES -->
+<section class="sec" id="services" style="background:var(--bg2);"><div class="w">
+  <div class="sec-label rv">Services</div>
+  <h2 class="rv">ご支援サービス</h2>
+  <p class="lead rv">単発の開発から継続的な業務委託、チームでのDX支援、個別指導まで。ご状況に合わせて<strong>4つのサービス</strong>をご用意しています。</p>
+
+  <div class="svc-grid">
+    <article class="svc-card rv">
+      <div class="svc-head">
+        <div class="svc-num"><span>01</span><span class="svc-lbl">SPOT</span></div>
+        <div class="svc-price">¥10,000〜（税抜）</div>
+      </div>
+      <h3 class="svc-title">Claude Code<br>スポット開発支援</h3>
+      <p class="svc-tag"><strong>まず1つ試したい</strong>方向け。単発でのご依頼に対応します。</p>
+      <ul class="ck">
+        <li>環境構築・初期設定から対応</li>
+        <li>ご希望のAIアプリを1本構築してお渡し</li>
+        <li>操作マニュアル付きで、そのまま運用できる状態に</li>
+      </ul>
+      <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/spot-development.html" target="_blank" rel="noopener noreferrer" class="svc-cta">詳しく見る &rarr;</a>
+    </article>
+
+    <article class="svc-card svc-card--dark rv">
+      <div class="svc-head">
+        <div class="svc-num svc-num--dark"><span>02</span><span class="svc-lbl">RETAINER</span></div>
+        <div class="svc-price">月額 50,000円〜（税抜）</div>
+      </div>
+      <h3 class="svc-title">Claude Code<br>業務委託支援</h3>
+      <p class="svc-tag"><strong>AIエンジニアとAI顧問の両方</strong>を1人で担当。月額・継続契約で伴走します。</p>
+      <ul class="ck">
+        <li>AIツールの開発をそのまま任せられる</li>
+        <li>活用方針・進め方をいつでも相談できる</li>
+        <li>ご紹介キャッシュバック制度あり</li>
+      </ul>
+      <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/retainer.html" target="_blank" rel="noopener noreferrer" class="svc-cta svc-cta--dark">詳しく見る &rarr;</a>
+    </article>
+
+    <article class="svc-card rv">
+      <div class="svc-head">
+        <div class="svc-num"><span>03</span><span class="svc-lbl">DX PACK</span></div>
+        <div class="svc-price">特別価格 65万円</div>
+      </div>
+      <h3 class="svc-title">中小企業向け<br>DXスターターパック</h3>
+      <p class="svc-tag"><strong>FAX・紙・Excel</strong>で回っている業務を「1業務だけ」小さくシステム化。</p>
+      <ul class="ck">
+        <li>営業・DXアドバイザー・技術開発の3名体制</li>
+        <li>受注から運用定着まで一貫対応</li>
+        <li>まず1業務から始められるスモールスタート</li>
+      </ul>
+      <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/dx-starter-pack.html" target="_blank" rel="noopener noreferrer" class="svc-cta">詳しく見る &rarr;</a>
+    </article>
+
+    <article class="svc-card rv">
+      <div class="svc-head">
+        <div class="svc-num"><span>04</span><span class="svc-lbl">MENTOR</span></div>
+        <div class="svc-price">月額 3,000円（特別価格）</div>
+      </div>
+      <h3 class="svc-title">Claude Code<br>個別家庭教師</h3>
+      <p class="svc-tag"><strong>プログラミング未経験</strong>の方向け。1対1で伴走する個別指導です。</p>
+      <ul class="ck">
+        <li>環境構築・基礎学習からスタート</li>
+        <li>ポートフォリオ作成まで並走</li>
+        <li>案件獲得のご相談まで対応</li>
+      </ul>
+      <a href="https://fkdkazu-commits.github.io/mentor-lp/" target="_blank" rel="noopener noreferrer" class="svc-cta">詳しく見る &rarr;</a>
+    </article>
+  </div>
+
+  <p class="svc-foot rv">
+    どのメニューが合うか分からない場合も、まずは <a href={CONTACT_URL}>無料相談</a> からお気軽にどうぞ。<br>
+    ご要望をうかがったうえで、適したご支援の形をご提案します。
+  </p>
+</div></section>
+
+<!-- SERVICE FLOW -->
+<section class="sec" id="flow"><div class="w">
+  <div class="sec-label rv">Service Flow</div>
+  <h2 class="rv">ご支援の流れ</h2>
+  <p class="lead rv">ご相談から運用定着まで、5ステップで進めます。技術的な知識は不要です。</p>
+
+  <div class="flow-timeline rv">
+    <div class="flow-line"></div>
+    <div class="flow-progress"></div>
+
+    <div class="flow-step-v2">
+      <div class="fs-num">01</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+      <div class="fs-title">ご相談<br>お問合せ</div>
+      <div class="fs-desc">XのDM または<br>フォームから</div>
+    </div>
+
+    <div class="flow-step-v2">
+      <div class="fs-num">02</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <div class="fs-title">業務ヒアリング<br>課題の棚卸し</div>
+      <div class="fs-desc">自動化できる業務を<br>洗い出す</div>
+    </div>
+
+    <div class="flow-step-v2">
+      <div class="fs-num">03</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="fs-title">設計<br>お見積</div>
+      <div class="fs-desc">対象業務と進め方を<br>ご提案</div>
+    </div>
+
+    <div class="flow-step-v2">
+      <div class="fs-num">04</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <div class="fs-title">実装<br>テスト</div>
+      <div class="fs-desc">Claude Codeで構築<br>実データで検証</div>
+    </div>
+
+    <div class="flow-step-v2">
+      <div class="fs-num">05</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div>
+      <div class="fs-title">納品<br>運用定着</div>
+      <div class="fs-desc">マニュアル提供<br>AWS展開・改善も</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- USE CASES -->
+<section class="sec" id="usecases" style="background:var(--bg2);"><div class="w">
+  <div class="sec-label rv">Use Cases</div>
+  <h2 class="rv">これまでに作ってきた自動化ツール</h2>
+  <p class="lead rv">自社業務・支援先で実際に構築してきたAIツールの一部です。<strong>繰り返し発生する業務</strong>であれば、業種を問わず自動化できます。</p>
+
+  <div class="usecase-grid">
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="uc-body"><div class="uc-num">01</div><h4 class="uc-title">求人票・スカウト文の自動生成</h4><p class="uc-desc">募集条件を渡すだけで、媒体に合わせた求人票とスカウト文を自動で書き起こし</p><div class="uc-stat"><span class="uc-rate">採用・HR</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      <div class="uc-body"><div class="uc-num">02</div><h4 class="uc-title">スクリーニング自動採点AI</h4><p class="uc-desc">応募書類を評価基準に沿ってAIが採点し、選考の一次判断を効率化</p><div class="uc-stat"><span class="uc-rate">採用・HR</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+      <div class="uc-body"><div class="uc-num">03</div><h4 class="uc-title">面談メモのAI構造化</h4><p class="uc-desc">面談メモをそのまま渡すと、評価項目ごとに整理された記録へ自動変換</p><div class="uc-stat"><span class="uc-rate">採用・HR</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      <div class="uc-body"><div class="uc-num">04</div><h4 class="uc-title">請求書管理システム</h4><p class="uc-desc">AWS × Claude Vision で請求書を読み取り、管理・集計まで自動化</p><div class="uc-stat"><span class="uc-rate">バックオフィス</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+      <div class="uc-body"><div class="uc-num">05</div><h4 class="uc-title">内部リンク構築AIエージェント</h4><p class="uc-desc">SEOデータを渡すだけで、被リンク不足の記事に張るべき内部リンクをAIが提案</p><div class="uc-stat"><span class="uc-rate">SEO対策</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+      <div class="uc-body"><div class="uc-num">06</div><h4 class="uc-title">SEO記事自動化パイプライン</h4><p class="uc-desc">キーワード選定から記事執筆・入稿まで一気通貫で自動化</p><div class="uc-stat"><span class="uc-rate">SEO・コンテンツ</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="uc-body"><div class="uc-num">07</div><h4 class="uc-title">顧客育成ジャーニー設計AI</h4><p class="uc-desc">顧客の状態に合わせた育成シナリオをAIが設計し、施策に落とし込む</p><div class="uc-stat"><span class="uc-rate">マーケティング</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <div class="uc-body"><div class="uc-num">08</div><h4 class="uc-title">Gmail × LINE 自動連携</h4><p class="uc-desc">重要なメールを判定してLINEへ通知。見落としと確認の手間をなくす</p><div class="uc-stat"><span class="uc-rate">情報連携</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <div class="uc-body"><div class="uc-num">09</div><h4 class="uc-title">GSCカニバリゼーション分析</h4><p class="uc-desc">Search Consoleのデータから、順位を食い合っている記事を自動で特定</p><div class="uc-stat"><span class="uc-rate">SEO対策</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c10"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="uc-body"><div class="uc-num">10</div><h4 class="uc-title">Gmail → カレンダー自動登録</h4><p class="uc-desc">日程調整メールから予定を読み取り、カレンダーへ自動で登録</p><div class="uc-stat"><span class="uc-rate">情報連携</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c11"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+      <div class="uc-body"><div class="uc-num">11</div><h4 class="uc-title">SNS投稿の自動生成</h4><p class="uc-desc">記事や実績のネタから、そのまま出せる投稿文を自動で作成</p><div class="uc-stat"><span class="uc-rate">マーケティング</span></div></div>
+    </div>
+    <div class="uc-card rv">
+      <div class="uc-illust uc-c12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="uc-body"><div class="uc-num">12</div><h4 class="uc-title">会社経営 AI役員チーム</h4><p class="uc-desc">役割の違う複数のAIが、経営判断に必要な論点を多面的に検討</p><div class="uc-stat"><span class="uc-rate">経営・意思決定</span></div></div>
+    </div>
+  </div>
+
+  <div class="usecase-progress" aria-hidden="true"><div class="usecase-progress-bar" id="usecase-progress-bar"></div></div>
+  <div class="usecase-hint" aria-hidden="true">
+    <span class="arrow">←</span><span>スワイプで全12事例を見る</span><span class="arrow">→</span>
+  </div>
+
+  <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--muted);" class="rv">
+    上記はほんの一例です。<strong style="color:var(--ink);">DXスターターパック・AWS Lambdaへのチーム展開・YouTube動画の収集分析</strong>など、業務に合わせて設計します。
+  </p>
+</div></section>
+
+<!-- RESULTS / SHOWCASE -->
+<section class="sec" id="results"><div class="w">
+  <div class="sec-label rv">Results</div>
+  <h2 class="rv">導入実績・事例</h2>
+  <p class="lead rv">自社業務および支援先企業での実績をご紹介します。各カードから詳細ページをご覧いただけます。</p>
+
+  <div class="sc-grid">
+    <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-consulting-lp/marketing-ai-dashboard.html" target="_blank" rel="noopener noreferrer">
+      <div class="sc-thumb"><img src="/images/marketing-dashboard-sample.png" alt="マーケティングAIダッシュボードの診断画面" loading="lazy"></div>
+      <div class="sc-body">
+        <span class="sc-cat">マーケティング</span>
+        <h4 class="sc-title">マーケティングAIダッシュボード</h4>
+        <p class="sc-desc">商談メモ・議事録から自動でナレッジを抽出・蓄積し、「あなたの判断基準」で動く根拠付きAI診断を実現。事実整理から5軸診断・改善提案・年間ロードマップまで提案書として自動生成します。</p>
+        <div class="sc-metric">数千件規模の商談メモを一括ナレッジ化</div>
+      </div>
+    </a>
+
+    <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-efficiency-article/seo-pipeline.html" target="_blank" rel="noopener noreferrer">
+      <div class="sc-thumb sc-thumb--ph ph-warm"><span>SEO記事制作の<br>完全自動化パイプライン</span></div>
+      <div class="sc-body">
+        <span class="sc-cat">SEO・コンテンツ</span>
+        <h4 class="sc-title">SEO記事制作の完全自動化パイプライン</h4>
+        <p class="sc-desc">キーワード選定から記事執筆・入稿まで一気通貫で自動化。外注コストと作業時間を大幅に削減しました。</p>
+        <div class="sc-metric">約80% コスト削減</div>
+      </div>
+    </a>
+
+    <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-efficiency-article/internal-link-agent.html" target="_blank" rel="noopener noreferrer">
+      <div class="sc-thumb sc-thumb--ph ph-teal"><span>内部リンク構築<br>AIエージェント</span></div>
+      <div class="sc-body">
+        <span class="sc-cat">SEO対策</span>
+        <h4 class="sc-title">内部リンク構築 AIエージェント</h4>
+        <p class="sc-desc">SEOデータのスプレッドシートを渡すだけで、被リンク不足記事への内部リンク候補をAIが自動提案。4項目・100点満点で採点し、WordPressへの自動反映も拡張可能です。</p>
+        <div class="sc-metric">約200記事を約50分で処理</div>
+      </div>
+    </a>
+
+    <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-efficiency-article/hearing-mock.html" target="_blank" rel="noopener noreferrer">
+      <div class="sc-thumb"><img src="/news/news-hearing-mock.png" alt="AIヒアリングからモックアップを自動生成するツール" loading="lazy"></div>
+      <div class="sc-body">
+        <span class="sc-cat">営業・提案</span>
+        <h4 class="sc-title">AIヒアリング〜モックアップ自動生成</h4>
+        <p class="sc-desc">ヒアリング中の音声をリアルタイムで文字起こしし、AIが要件を分析。不足要件を洗い出したうえで、4画面分のHTMLモックまで自動生成します。</p>
+        <div class="sc-metric">最短30分でヒアリング〜モック完成</div>
+      </div>
+    </a>
+
+    <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-consulting-lp/hands-free-dev.html" target="_blank" rel="noopener noreferrer">
+      <div class="sc-thumb"><img src="/news/news-unia.png" alt="ハンズフリーAI開発チーム UNIA" loading="lazy"></div>
+      <div class="sc-body">
+        <span class="sc-cat">開発環境</span>
+        <h4 class="sc-title">ハンズフリーAI開発チーム（UNIA）</h4>
+        <p class="sc-desc">iPhoneに相談しながら要件を固め、PC上のClaude Codeが調査・実装・テストまで実行。司令塔のAIユナと実行担当のAIレンが、複数のAIをひとつのチームとして動かします。</p>
+        <div class="sc-metric">会話だけで完結する開発フロー</div>
+      </div>
+    </a>
+
+    <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-efficiency-article/crm-initial-build.html" target="_blank" rel="noopener noreferrer">
+      <div class="sc-thumb"><img src="/news/news-crm.png" alt="クラウドCRM 初期構築（BtoB商社）" loading="lazy"></div>
+      <div class="sc-body">
+        <span class="sc-cat">CRM・営業管理</span>
+        <h4 class="sc-title">クラウドCRM 初期構築（BtoB商社）</h4>
+        <p class="sc-desc">担当者ごとの手帳やExcelに散在していた営業情報を、CRMの標準機能で一元管理。基幹システム・ECサイト・名刺管理サービスとの連携も設計しています。</p>
+        <div class="sc-metric">8画面のUIモックと設計を先行（進行中）</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="sc-more rv">
+    <a class="btn btn-outline" href="https://fkdkazu-commits.github.io/ai-efficiency-article/" target="_blank" rel="noopener noreferrer" style="font-size:15px;padding:15px 32px;">その他の導入実績をすべて見る &rarr;</a>
+  </div>
+</div></section>
+
+<!-- NEWS -->
+<section class="sec" id="news" style="background:var(--bg2);"><div class="w">
+  <div class="news-head rv">
+    <div>
+      <div class="sec-label">News</div>
+      <h2>お知らせ</h2>
+    </div>
+    <button type="button" class="news-more" id="newsMore" aria-expanded="false" aria-controls="newsGrid">
+      <span class="news-more-label">すべて見る</span>
+      <span class="news-more-circle" aria-hidden="true">&rarr;</span>
+    </button>
+  </div>
+
+  <div class="news-grid" id="newsGrid">
+    <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/hands-free-dev.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
+      <img class="news-thumb-img" src="/news/news-unia.png" alt="ハンズフリーAI開発チーム（UNIA）" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.8.15</span>
+      <div class="news-card-title">ハンズフリーAI開発チーム（UNIA）の紹介ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/crm-initial-build.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
+      <img class="news-thumb-img" src="/news/news-crm.png" alt="クラウドCRM 初期構築（BtoB商社）" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.7.29</span>
+      <div class="news-card-title">クラウドCRM 初期構築（BtoB商社）の実績ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/retainer.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
+      <img class="news-thumb-img" src="/news/news-retainer.png" alt="Claude Code 業務委託支援" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.7.27</span>
+      <div class="news-card-title">Claude Code 業務委託支援のサービス詳細ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/youtube-note-generator.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
+      <img class="news-thumb-img" src="/news/news-youtube-note.png" alt="YouTube → note 記事自動生成" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.7.24</span>
+      <div class="news-card-title">YouTube → note 記事自動生成ツールの実績ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/retainer.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
+      <img class="news-thumb-img" src="/news/news-referral.png" alt="月額顧問契約・ご紹介キャッシュバック制度" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.7.15</span>
+      <div class="news-card-title">Claude Code 業務委託支援（月額顧問契約・ご紹介キャッシュバック制度あり）を開始しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/wp-auto-insert.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
+      <img class="news-thumb-img" src="/news/news-wp-link.png" alt="WordPress 内部リンク自動挿入" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.7.12</span>
+      <div class="news-card-title">WordPress内部リンク自動挿入ツールの実績ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/hearing-mock.html" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <img class="news-thumb-img" src="/news/news-hearing-mock.png" alt="AIヒアリング → モックアップ自動生成" loading="lazy" width="720" height="514">
+      <span class="news-card-date">2026.7.12</span>
+      <div class="news-card-title">AIヒアリング〜モックアップ自動生成ツールの実績ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/internal-link-agent.html" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <div class="news-thumb news-thumb--case"><span class="news-thumb-tag">実績公開</span><span class="news-thumb-text">内部リンク構築<br>AIエージェント</span></div>
+      <span class="news-card-date">2026.6.7</span>
+      <div class="news-card-title">内部リンク構築AIエージェントの実績ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/mentor-lp/" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <div class="news-thumb news-thumb--new"><span class="news-thumb-tag">新着</span><span class="news-thumb-text">Claude Code<br>個別家庭教師</span></div>
+      <span class="news-card-date">2026.5.18</span>
+      <div class="news-card-title">Claude Code 個別家庭教師（月額3,000円・完全初心者歓迎）を開始しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/dx-starter-pack.html" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <div class="news-thumb news-thumb--new"><span class="news-thumb-tag">新着</span><span class="news-thumb-text">中小企業向け<br>DXスターターパック</span></div>
+      <span class="news-card-date">2026.5.5</span>
+      <div class="news-card-title">中小企業向け DXスターターパック（FAX・Excel業務のシステム化）を公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/screening.html" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <div class="news-thumb news-thumb--case"><span class="news-thumb-tag">実績公開</span><span class="news-thumb-text">採用支援AI Phase2<br>スクリーニング自動採点</span></div>
+      <span class="news-card-date">2026.4.25</span>
+      <div class="news-card-title">採用支援AI Phase2（スクリーニング自動採点）の詳細ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/recruitment-tool.html" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <div class="news-thumb news-thumb--case"><span class="news-thumb-tag">実績公開</span><span class="news-thumb-text">採用支援AI Phase1<br>求人票・スカウト文生成</span></div>
+      <span class="news-card-date">2026.4.25</span>
+      <div class="news-card-title">採用支援AI Phase1（求人票・スカウト文自動生成）の詳細ページを公開しました</div>
+    </a>
+    <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
+      <div class="news-thumb news-thumb--case"><span class="news-thumb-tag">実績公開</span><span class="news-thumb-text">AI業務自動化アプリ<br>導入実績まとめ</span></div>
+      <span class="news-card-date">2026.4.25</span>
+      <div class="news-card-title">AI業務自動化アプリ 導入実績まとめページを公開しました</div>
+    </a>
+  </div>
+</div></section>
+
+<!-- PROFILE (Dark band) -->
+<section class="prof-band" id="profile"><div class="w">
+  <div class="prof-grid">
+    <div class="rv">
+      <div class="prof-avatar"><img src="/images/profile.png" alt="福田和弘" loading="lazy" width="520" height="520"></div>
+    </div>
+    <div class="rv">
+      <div class="sec-label">Profile</div>
+      <div class="prof-name">福田 和弘</div>
+      <div class="prof-role">AI/DX推進支援 · SEO全般 · 法人サポート・個別サポート</div>
+      <p class="prof-bio">
+        IT企業にてマネジメント職を20年以上経験し、DX事業の立ち上げを担当。現在はClaude CodeをはじめとしたAIツールを活用した業務自動化支援を行っています。<br>
+        自社業務で実際に運用している仕組みをベースに、中小企業・個人事業主向けに実装。SEO記事自動化では約80%のコスト削減を実現するなど、現場で動く仕組みづくりを得意としています。
+      </p>
+      <div class="prof-tags">
+        <span>Claude Code</span><span>AWS</span><span>業務自動化</span><span>DX推進</span><span>AI顧問</span><span>中小企業支援</span><span>SEO</span><span>Copilot Studio</span><span>Power Automate</span>
+      </div>
+      <a href="https://fukuda-seo-u6n7h7l.gamma.site/marketer-kazuf" target="_blank" rel="noopener noreferrer" class="prof-link">プロフィール詳細を見る &rarr;</a>
+    </div>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="sec" id="faq"><div class="w" style="max-width:800px;">
+  <div class="sec-label rv">FAQ</div>
+  <h2 class="rv">よくあるご質問</h2>
+  <div style="margin-top:24px;" class="rv">
+    {FAQS.map(([q, a]) => (
+      <details class="faq"><summary>{q}</summary><p>{a}</p></details>
+    ))}
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <div class="w rv">
+    <div style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:20px;padding:7px 16px;background:var(--accent-soft);border:1px solid rgba(212,98,42,.15);border-radius:100px;">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;"></span>
+      相談無料
+    </div>
+    <h2>まずは気軽に、<br><em>ご相談ください。</em></h2>
+    <p class="lead">「こんなことを自動化したい」というアイデアだけでも大歓迎です。<br>X（DM）またはお問合せフォームよりご連絡ください。</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:36px;flex-wrap:wrap;">
+      <a href={X_URL} target="_blank" rel="noopener noreferrer" class="btn btn-x" style="font-size:16px;padding:17px 40px;">𝕏 でDMを送る</a>
+      <a href={CONTACT_URL} class="btn btn-gradient" style="font-size:16px;padding:17px 40px;">✉ まずは無料相談</a>
+    </div>
+    <div style="margin-top:28px;font-size:12.5px;color:var(--muted);">
+      通常1営業日以内にご返信 &bull; 相談無料 &bull; しつこい営業はしません
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer><div class="w footer">
+  <div class="footer-logos">
+    <span class="brand-mark">F</span>
+    <span style="font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.02em;">福田和弘 / AI業務自動化支援</span>
+  </div>
+  <div class="footer-nav">
+    <a href="#services">サービス</a>
+    <a href="#usecases">活用事例</a>
+    <a href="#results">導入実績</a>
+    <a href="#news">お知らせ</a>
+    <a href="#profile">プロフィール</a>
+    <a href="#faq">FAQ</a>
+    <a href={X_URL} target="_blank" rel="noopener noreferrer">X {X_HANDLE}</a>
+    <a href={`mailto:${MAIL}`}>{MAIL}</a>
+  </div>
+  <small>&copy; 2026 福田和弘 / AI業務自動化支援</small>
+</div></footer>
+
+<script>
+// スクロールリビール
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+// スクリーンショット用の静的モード
+if (location.search.includes('static')) document.querySelectorAll('.rv').forEach(el => el.classList.add('v'));
+
+// ナビの背景をスクロールで濃くする
+const nav = document.querySelector('.nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// 活用事例カルーセルの進捗バー（モバイルのみ表示）
+(function () {
+  const grid = document.querySelector('#usecases .usecase-grid');
+  const bar = document.getElementById('usecase-progress-bar');
+  if (!grid || !bar) return;
+  function updateBar() {
+    const max = grid.scrollWidth - grid.clientWidth;
+    const pct = max > 0 ? grid.scrollLeft / max : 0;
+    bar.style.transform = 'translateX(' + (pct * 75) + '%)';
+  }
+  grid.addEventListener('scroll', updateBar, { passive: true });
+  updateBar();
+})();
+
+// お知らせ：「すべて見る」で7件目以降を開閉
+(function () {
+  const btn = document.getElementById('newsMore');
+  if (!btn) return;
+  const label = btn.querySelector('.news-more-label');
+  btn.addEventListener('click', () => {
+    const isOpen = btn.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', String(isOpen));
+    label.textContent = isOpen ? '閉じる' : 'すべて見る';
+    document.querySelectorAll('#newsGrid .news-card').forEach((card, i) => {
+      if (i >= 6) card.classList.toggle('is-hidden', !isOpen);
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,807 @@
+---
+// ─────────────────────────────────────────────────────────────
+// デザインサンプル（制作事例）
+// 人流データ分析SaaSのLPを想定した架空サービスのページ。
+// 社名・サービス名・料金・実績・連絡先はすべて架空。実在の企業・製品とは無関係。
+// 検索エンジンに拾わせないため noindex、サイトマップからも除外している。
+//
+// 画面キャプチャは scripts/mock-*.html を Edge ヘッドレスで撮ったもの。
+// ─────────────────────────────────────────────────────────────
+import '../../styles/saas-base.css';
+
+const SERVICE = '人流スコープ';
+const COMPANY = '株式会社ジオリンクス';
+const TITLE = '人流スコープ｜街の人流と実勢商圏を可視化する人流データ分析プラットフォーム【デザインサンプル】';
+const DESC = 'デザインサンプルとして制作した架空サービスのLPです。掲載の社名・サービス名・料金・実績はすべて架空のものです。';
+
+const INDUSTRIES = ['流通・小売', '飲食', 'メーカー', '金融・不動産', '建設・インフラ', '官公庁・自治体', '観光・インバウンド'];
+
+const FAQS = [
+  ['どのようなデータを使っていますか？', 'スマートフォンアプリから同意を得て取得した位置情報を、個人を特定できない形に統計処理したうえで利用する想定のサンプル記載です。実在のデータ提供元・仕様を示すものではありません。'],
+  ['分析地点（POI）はいくつ登録できますか？', '標準プランで500地点、Liteプランで200地点まで。円指定・ポリゴン指定・複数地点の一括登録の3方式に対応する構成です。'],
+  ['登録してからどのくらいでデータが見られますか？', '地点登録の翌営業日から、過去分をさかのぼって表示できる想定です。日次データは前日分まで反映されます。'],
+  ['スマートフォンやタブレットでも使えますか？', 'PCブラウザでの利用を前提とした設計です。タブレットは閲覧のみ、スマートフォンは主要指標の確認に限定する構成を想定しています。'],
+  ['分析結果の読み解きも相談できますか？', 'はい。オンボーディング期間中の伴走に加え、有償のプレミアムサポートではカスタムレポートの作成まで対応する構成にしています。'],
+  ['無料トライアルはありますか？', '2週間、契約時と同じ機能をお試しいただける想定です。期間中もサポート窓口をご利用いただけます。'],
+  ['契約期間と支払い方法は？', '1年契約・年間一括または月次請求を想定した記載です。実際の条件を示すものではありません。'],
+];
+---
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#0b2138">
+<meta name="robots" content="noindex,nofollow">
+<title>{TITLE}</title>
+<meta name="description" content={DESC}>
+<meta property="og:type" content="website">
+<meta property="og:title" content={TITLE}>
+<meta property="og:description" content={DESC}>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="/demo/mock-map.png" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══ このページ固有のスタイル（共通トークンは saas-base.css） ═══ */
+
+.demo-notice{background:var(--ink);color:#fff;font-size:12.5px;line-height:1.7;padding:10px 24px;text-align:center;}
+.demo-notice b{color:var(--accent-on-dark);font-weight:800;}
+.demo-notice a{text-decoration:underline;text-underline-offset:2px;color:rgba(255,255,255,.72);}
+.demo-notice a:hover{color:#fff;}
+
+.demo-notice{background:#061422;}
+.nav{position:sticky;top:0;}
+.brand-mark{width:30px;height:30px;border-radius:3px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
+.brand-text{font-weight:800;font-size:14px;color:var(--ink);white-space:nowrap;}
+.brand-text span{display:block;font-size:9.5px;font-weight:700;color:var(--muted2);letter-spacing:.14em;margin-top:1px;}
+.nav .btn-dark{background:#efa72c;color:#0b2138;}
+.nav .btn-dark:hover{background:#dd9420;}
+
+/* ── ヒーロー直下のアンカーバー（長い縦スクロールの回遊用） ── */
+.anchor-bar{background:#071a2c;border-bottom:1px solid rgba(255,255,255,.08);}
+.anchor-bar .w{display:flex;justify-content:center;flex-wrap:wrap;}
+.anchor-bar a{
+  font-size:13px;font-weight:700;color:rgba(255,255,255,.72);
+  padding:15px 26px;border-bottom:2px solid transparent;transition:color .18s,border-color .18s;
+}
+.anchor-bar a:hover{color:#fff;border-bottom-color:var(--c-teal-on-dark);}
+@media(max-width:820px){
+  .anchor-bar .w{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;}
+  .anchor-bar .w::-webkit-scrollbar{display:none;}
+  .anchor-bar a{padding:13px 16px;white-space:nowrap;}
+}
+
+/* ── ヒーロー上段：白ベースのオーロラ状グラデーション ──
+   ベースに色面を敷き、その上にぼかした色の塊を2つ重ねて奥行きを出す。
+   文字が乗る左上だけは白を残して可読性を確保している。 */
+.hero{
+  overflow:hidden;position:relative;border-bottom:0;padding:80px 0 72px;
+  background:
+    radial-gradient(52% 62% at 34% 2%, rgba(239,167,44,.30), transparent 66%),
+    radial-gradient(58% 72% at 4% 98%, rgba(116,88,200,.26), transparent 62%),
+    radial-gradient(72% 88% at 96% 96%, rgba(14,159,110,.24), transparent 60%),
+    linear-gradient(158deg,#ffffff 0%,#f4fbfd 38%,#e4f0f6 100%);
+}
+/* ぼかした色の塊。blur を強めにかけて、面ではなく光に見せる */
+.hero::before,.hero::after{content:'';position:absolute;border-radius:50%;pointer-events:none;}
+.hero::before{
+  width:900px;height:900px;top:-330px;right:-180px;
+  background:radial-gradient(closest-side,rgba(15,151,168,.68),rgba(15,151,168,0));
+  filter:blur(36px);
+}
+.hero::after{
+  width:760px;height:760px;bottom:-340px;left:-140px;
+  background:radial-gradient(closest-side,rgba(47,111,208,.52),rgba(47,111,208,0));
+  filter:blur(46px);
+}
+.hero > .w{position:relative;z-index:1;}
+@media(max-width:900px){
+  .hero::before{width:560px;height:560px;top:-220px;right:-160px;}
+  .hero::after{width:480px;height:480px;bottom:-240px;left:-140px;}
+}
+.hero-grid{grid-template-columns:1.16fr 1fr;align-items:center;}
+.hero-tag{color:var(--c-teal);}
+.hero h1{font-size:clamp(27px,3.2vw,41px);color:var(--ink);}
+.hero h1 em{color:var(--accent);}
+.hero-shot img{width:132%;height:auto;max-width:none;border:1px solid rgba(16,42,67,.1);border-right:0;border-radius:0;box-shadow:-20px 28px 64px -26px rgba(16,42,67,.42);}
+
+/* ── ヒーロー下段：主要指標のダーク帯（大きな色付き数字） ── */
+.stats-band{
+  position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#0b2138 0%,#0d2c40 58%,#07323a 100%);
+}
+.stats-band::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(closest-side at 76% 18%,rgba(15,151,168,.28),transparent 68%);
+}
+.stats-band .w{position:relative;z-index:1;}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;padding:46px 0;}
+.hero-stats b{display:block;font-size:clamp(30px,4.4vw,52px);font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--m);}
+.hero-stats b i{font-style:normal;font-size:.44em;font-weight:800;margin-left:4px;letter-spacing:0;}
+.hero-stats span{display:block;font-size:12.5px;color:rgba(255,255,255,.5);margin-top:12px;line-height:1.6;}
+.hero-stats div:nth-child(1){--m:var(--accent-on-dark);}
+.hero-stats div:nth-child(2){--m:var(--c-blue-on-dark);}
+.hero-stats div:nth-child(3){--m:var(--c-amber-on-dark);}
+
+/* ページ側のスコープ付き指定は共通CSSより詳細度が高く、
+   共通CSS側のメディアクエリだけでは1カラム化されない。ここで明示的に戻す。 */
+@media(max-width:900px){
+  .hero{padding:44px 0 40px;}
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-shot img{width:100%;border-right:1px solid rgba(16,42,67,.1);border-radius:0;}
+  .hero-stats{gap:24px;padding:32px 0;}
+}
+@media(max-width:560px){
+  .hero-stats{grid-template-columns:1fr;gap:20px;}
+  .hero-stats span{margin-top:6px;}
+}
+
+/* ── 対応業界：カードをやめて1本の帯にする ── */
+.chips-band{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:22px 0;}
+.chips-band .w{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.chips-lead{font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:.1em;white-space:nowrap;}
+.chips{display:flex;gap:10px 28px;flex-wrap:wrap;}
+.chips span{font-size:13.5px;font-weight:700;color:var(--ink);}
+
+/* ── 課題提起：枠なしのステートメント ── */
+.stmt{padding:88px 0 76px;}
+.stmt h2{font-size:clamp(23px,3vw,35px);font-weight:800;line-height:1.6;letter-spacing:-.015em;max-width:1000px;}
+.stmt h2 mark{background:linear-gradient(transparent 62%,rgba(14,159,110,.22) 0);color:inherit;padding:0 2px;}
+.stmt-list{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;border-top:1px solid var(--border);}
+.stmt-list div{padding:26px 28px 4px 0;border-right:1px solid var(--border);}
+.stmt-list div:last-child{border-right:0;padding-right:0;}
+.stmt-list h3{font-size:15px;font-weight:800;margin-bottom:8px;}
+.stmt-list p{font-size:13px;color:var(--muted);line-height:1.9;}
+@media(max-width:820px){.stmt{padding:56px 0 48px;}.stmt-list{grid-template-columns:1fr;}.stmt-list div{border-right:0;border-bottom:1px solid var(--border);padding:22px 0;}.stmt-list div:last-child{border-bottom:0;}}
+
+/* ── 機能：左右交互 ── */
+.zig{display:grid;grid-template-columns:1fr 1.3fr;gap:56px;align-items:center;padding:60px 0;border-top:1px solid var(--border);}
+.zig--rev .zig-text{order:2;}
+.zig-step{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--accent);margin-bottom:12px;}
+.zig-text h3{font-size:clamp(21px,2.5vw,27px);font-weight:800;line-height:1.5;letter-spacing:-.015em;margin-bottom:14px;}
+.zig-text > p{font-size:14.5px;color:var(--muted);line-height:2;margin-bottom:18px;}
+.zig-text .ck li{font-size:13.5px;}
+.zig-shot{border-top:3px solid var(--ck-color);padding-top:16px;}
+.zig-shot img{width:100%;height:auto;border:1px solid var(--border2);border-radius:0;box-shadow:0 26px 54px -28px rgba(16,42,67,.45);}
+.zig-cap{font-size:11.5px;color:var(--muted2);margin-top:10px;}
+@media(max-width:900px){.zig{grid-template-columns:1fr;gap:28px;padding:40px 0;}.zig--rev .zig-text{order:0;}}
+
+/* ── インバウンド（ダーク・非対称）
+   ヒーローとサポートが紺なので、ここだけ深いティールにして帯を作り分ける ── */
+#inbound{background:#07323a;}
+.inb{display:grid;grid-template-columns:.85fr 1fr;gap:56px;align-items:center;}
+.inb-big{font-size:clamp(56px,8vw,104px);font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--accent-on-dark);}
+.inb-big small{display:block;font-size:14px;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.5);margin-top:12px;}
+.inb-sub{display:flex;gap:32px;margin-top:32px;flex-wrap:wrap;}
+.inb-sub div b{display:block;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em;}
+.inb-sub div span{font-size:12px;color:rgba(255,255,255,.5);}
+@media(max-width:900px){.inb{grid-template-columns:1fr;gap:28px;}}
+
+/* ── 料金：比較表 ── */
+.ptable{width:100%;border-collapse:collapse;margin-top:36px;background:#fff;border-top:2px solid var(--ink);}
+.ptable th,.ptable td{padding:15px 20px;border-bottom:1px solid var(--border);text-align:left;font-size:13.5px;vertical-align:middle;}
+.ptable thead th{background:var(--bg2);font-size:12px;letter-spacing:.04em;color:var(--muted);font-weight:700;}
+.ptable thead th:not(:first-child){text-align:center;}
+.ptable td:not(:first-child){text-align:center;}
+.ptable tr:last-child td{border-bottom:0;}
+.ptable .pname{font-size:17px;font-weight:800;color:var(--ink);}
+.ptable .pprice{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.2;}
+.ptable .pprice small{font-size:11.5px;font-weight:700;color:var(--muted);margin-left:3px;}
+.ptable .reco{background:var(--accent-soft);}
+.ptable .reco .pname{color:var(--accent2);}
+.ptable .yes{color:var(--accent);font-weight:800;}
+.ptable .no{color:var(--muted2);}
+.ptable .rowlab{font-weight:700;color:var(--ink);width:38%;}
+.ptable .cta-row td{padding-top:18px;padding-bottom:20px;}
+@media(max-width:760px){.ptable{display:block;overflow-x:auto;white-space:nowrap;}.ptable .rowlab{width:auto;}}
+
+/* ── 事例：1件大きく、2件小さく ── */
+.case-feat{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center;margin-top:36px;padding:36px 0;border-top:3px solid var(--c-coral);border-bottom:1px solid var(--border);}
+.case-feat .quote{font-size:clamp(19px,2.3vw,25px);font-weight:800;line-height:1.7;letter-spacing:-.01em;}
+.case-feat .meta{font-size:12.5px;color:var(--muted);margin-top:18px;}
+.case-feat .num{font-size:clamp(54px,7vw,92px);font-weight:800;color:var(--c-coral);letter-spacing:-.04em;line-height:1;}
+.case-feat .numlab{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.7;}
+.case-sub{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:36px;padding-top:32px;border-top:1px solid var(--border);}
+.case-sub h4{font-size:15.5px;font-weight:800;margin-bottom:9px;}
+.case-sub p{font-size:13px;color:var(--muted);line-height:1.95;}
+.case-sub .m{font-size:13px;font-weight:800;color:var(--accent);margin-top:12px;}
+@media(max-width:820px){.case-feat{grid-template-columns:1fr;gap:24px;padding:26px;}.case-sub{grid-template-columns:1fr;gap:26px;}}
+
+/* ── サポート：番号付きリスト ── */
+.sup-list{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:32px;}
+.sup-list li{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.1);list-style:none;}
+.sup-list b{font-size:12px;font-weight:800;color:var(--accent-on-dark);letter-spacing:.1em;padding-top:3px;flex-shrink:0;}
+.sup-list h4{font-size:14.5px;font-weight:800;color:#fff;margin-bottom:3px;}
+.sup-list p{font-size:12.5px;color:rgba(255,255,255,.55);line-height:1.75;}
+@media(max-width:760px){.sup-list{grid-template-columns:1fr;}}
+
+/* ── トライアル帯 ── */
+.trial{background:var(--accent-soft);border-top:1px solid rgba(14,159,110,.16);border-bottom:1px solid rgba(14,159,110,.16);padding:64px 0;}
+.trial .w{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;}
+.trial h2{font-size:clamp(23px,3vw,32px);font-weight:800;line-height:1.55;letter-spacing:-.015em;}
+.trial p{font-size:14px;color:var(--muted);line-height:2;margin-top:14px;}
+.trial-pts{display:flex;flex-direction:column;gap:12px;}
+.trial-pts div{border-left:3px solid var(--m);padding:2px 0 2px 16px;font-size:14px;font-weight:800;}
+.trial-pts div span{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:3px;}
+@media(max-width:820px){.trial .w{grid-template-columns:1fr;gap:28px;}.trial{padding:44px 0;}}
+
+/* ═══ カテゴリ配色の割り当て ═══
+   「分析の段階」「業種」「サポートの層」など種類の違いに色を当てる。
+   CTA（緑）とは役割を分けているので、緑ボタンの目立ちは落ちない。 */
+
+/* 業種チップ：頭のドットで色分け */
+.chips span{display:inline-flex;align-items:center;gap:8px;}
+.chips span::before{content:'';width:7px;height:7px;border-radius:2px;background:var(--m);}
+.chips span:nth-child(1){--m:var(--c-blue);}
+.chips span:nth-child(2){--m:var(--c-coral);}
+.chips span:nth-child(3){--m:var(--c-amber);}
+.chips span:nth-child(4){--m:var(--accent);}
+.chips span:nth-child(5){--m:var(--c-purple);}
+.chips span:nth-child(6){--m:var(--c-teal);}
+.chips span:nth-child(7){--m:var(--c-coral);}
+
+/* 課題提起：3つの論点を色で分ける */
+.stmt-list h3{display:flex;align-items:center;gap:10px;}
+.stmt-list h3::before{content:'';width:10px;height:10px;border-radius:3px;background:var(--m);flex-shrink:0;}
+.stmt-list div:nth-child(1){--m:var(--c-coral);}
+.stmt-list div:nth-child(2){--m:var(--c-amber);}
+.stmt-list div:nth-child(3){--m:var(--c-purple);}
+
+/* 機能：4つの段階に固有の色を与える（ラベル・チェック・見出しの下線） */
+.zig-step{color:var(--ck-color);}
+.zig-text h3{border-left:3px solid var(--ck-color);padding-left:14px;margin-left:-17px;}
+.zig--s1{--ck-color:var(--c-blue);}
+.zig--s2{--ck-color:var(--accent);}
+.zig--s3{--ck-color:var(--c-purple);}
+.zig--s4{--ck-color:var(--c-amber);}
+@media(max-width:900px){.zig-text h3{margin-left:0;}}
+
+/* インバウンド：ダーク背景側もモノトーンにしない */
+.inb-big{color:var(--c-teal-on-dark);}
+.inb-sub div:nth-child(1) b{color:var(--accent-on-dark);}
+.inb-sub div:nth-child(2) b{color:var(--c-blue-on-dark);}
+.inb-sub div:nth-child(3) b{color:var(--c-amber-on-dark);}
+
+/* 料金：Liteプランは青系に振って、緑の標準プランと役割を分ける */
+.ptable .lite .pname{color:var(--c-blue);}
+.ptable .yes-b{color:var(--c-blue);font-weight:800;}
+.ptable .btn-outline{border-color:var(--c-blue);color:var(--c-blue);}
+.ptable .btn-outline:hover{background:var(--c-blue-soft);}
+
+/* 事例：指標ごとに色を変える */
+.case-sub div:nth-child(1) .m{color:var(--c-blue);}
+.case-sub div:nth-child(2) .m{color:var(--c-purple);}
+
+/* サポート：5段階を5色で */
+.sup-list li:nth-child(1) b{color:var(--accent-on-dark);}
+.sup-list li:nth-child(2) b{color:var(--c-blue-on-dark);}
+.sup-list li:nth-child(3) b{color:var(--c-purple-on-dark);}
+.sup-list li:nth-child(4) b{color:var(--c-amber-on-dark);}
+.sup-list li:nth-child(5) b{color:var(--c-teal-on-dark);}
+
+/* 導入の流れ：5ステップも色分けする（先頭2つは line / progress 要素） */
+.flow-step-v2:nth-child(3){--m:var(--c-blue);}
+.flow-step-v2:nth-child(4){--m:var(--c-purple);}
+.flow-step-v2:nth-child(5){--m:var(--c-amber);}
+.flow-step-v2:nth-child(6){--m:var(--c-teal);}
+.flow-step-v2:nth-child(7){--m:var(--accent);}
+.flow-step-v2 .fs-num{color:var(--m);}
+.flow-step-v2 .fs-icon{border-color:var(--m);color:var(--m);}
+.flow-step-v2:hover .fs-icon{background:var(--m);color:#fff;}
+.flow-progress{background:linear-gradient(90deg,var(--c-blue),var(--c-purple),var(--c-amber),var(--c-teal),var(--accent));opacity:.35;}
+
+/* ── 導入の流れ：円形バッジをやめ、色付きの罫線と大きな番号で組む ── */
+.flow-timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:28px;margin-top:40px;padding:0;}
+.flow-line,.flow-progress{display:none;}
+.flow-step-v2{text-align:left;border-top:3px solid var(--m);padding-top:16px;}
+.flow-step-v2 .fs-num{font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:10px;color:var(--m);}
+.flow-step-v2 .fs-icon{width:auto;height:auto;margin:0 0 8px;border:0;background:none;border-radius:0;justify-content:flex-start;color:var(--m);}
+.flow-step-v2 .fs-icon svg{width:20px;height:20px;}
+.flow-step-v2:hover .fs-icon{background:none;color:var(--m);}
+.flow-step-v2 .fs-title{font-size:15px;}
+@media(max-width:820px){.flow-timeline{grid-template-columns:1fr 1fr;gap:22px;}}
+@media(max-width:520px){.flow-timeline{grid-template-columns:1fr;}}
+
+/* 料金表：おすすめ列は角丸の箱ではなく、上に色の帯を敷いて示す */
+.ptable thead th.reco{box-shadow:inset 0 4px 0 var(--accent);}
+.ptable thead th.lite{box-shadow:inset 0 4px 0 var(--c-blue);}
+
+/* トライアルの3点：枠をやめて色の縦罫だけにする */
+.trial-pts div:nth-child(1){--m:var(--accent);}
+.trial-pts div:nth-child(2){--m:var(--c-blue);}
+.trial-pts div:nth-child(3){--m:var(--c-amber);}
+
+/* セクションラベルも1色に固定しない */
+#pricing .sec-label{color:var(--c-blue);}
+
+/* ── 用途別ダッシュボード：画面をデバイス枠に入れて並べる ── */
+.tpl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:40px;}
+.tpl-frame{background:#0b2138;padding:7px 7px 12px;border-radius:5px;box-shadow:0 18px 38px -20px rgba(11,33,56,.5);}
+.tpl-frame img{width:100%;height:auto;border-radius:2px;display:block;}
+.tpl figcaption{margin-top:16px;}
+.tpl figcaption b{display:block;font-size:15.5px;font-weight:800;color:var(--m);letter-spacing:-.005em;}
+.tpl figcaption span{display:block;font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.7;}
+.tpl:nth-child(1){--m:var(--c-amber);}
+.tpl:nth-child(2){--m:var(--c-purple);}
+.tpl:nth-child(3){--m:var(--accent);}
+.tpl:nth-child(4){--m:var(--c-blue);}
+@media(max-width:900px){.tpl-grid{grid-template-columns:1fr 1fr;gap:22px;}}
+@media(max-width:560px){.tpl-grid{grid-template-columns:1fr;}}
+
+/* ── 料金表：推奨コメントの吹き出し＋色ベタのプラン名 ── */
+.ptable .reco-row td{border-bottom:0;padding:0 14px 16px;text-align:center;}
+.bub{position:relative;border:1.5px solid var(--m);color:var(--m);padding:9px 14px;font-size:12.5px;font-weight:700;line-height:1.65;border-radius:3px;background:#fff;}
+.bub b{font-weight:800;font-size:14px;}
+.bub::before,.bub::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-style:solid;border-color:transparent;}
+.bub::before{bottom:-9px;border-width:9px 8px 0;border-top-color:var(--m);}
+.bub::after{bottom:-7px;border-width:7px 6px 0;border-top-color:#fff;}
+.ptable thead th.plan-h{background:var(--m);color:#fff;border-bottom:0;}
+.ptable thead th.plan-h .pname{color:#fff;font-size:16.5px;}
+.ptable thead th.plan-h--g{--m:var(--accent);}
+.ptable thead th.plan-h--b{--m:var(--c-blue);}
+.ptable .reco{background:#f6fafc;}
+@media(max-width:760px){.bub{font-size:11.5px;}.bub b{font-size:12.5px;}}
+
+/* ═══ 背景の作り分け ═══
+   白ベタと薄緑ベタが続くと平坦なので、白いセクションは寒色寄りの微グラデにし、
+   帯は緑一色ではなく紺・ティール側に振る。 */
+
+/* 白いセクションに、ごく薄い階調をつける */
+.chips-band{background:linear-gradient(180deg,#f7fafc 0%,#eef4f8 100%);}
+.stmt{background:linear-gradient(180deg,#ffffff 0%,#f8fbfd 100%);}
+#functions{background:linear-gradient(180deg,#fafcfe 0%,#ffffff 55%);}
+#pricing{background:linear-gradient(180deg,#eef4f8 0%,#f8fbfd 100%);}
+#cases{background:linear-gradient(180deg,#ffffff 0%,#f7fafc 100%);}
+#faq{background:linear-gradient(180deg,#f9fbfd 0%,#ffffff 60%);}
+
+/* トライアル帯：薄緑ベタをやめ、寒色の階調＋左の色罫だけで見せる */
+.trial{
+  background:linear-gradient(135deg,#eef4f8 0%,#f6fafc 45%,#eaf3f6 100%);
+  border-top:1px solid #dbe6ee;border-bottom:1px solid #dbe6ee;
+  position:relative;
+}
+.trial::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(closest-side at 82% 30%,rgba(15,151,168,.12),transparent 70%);
+}
+.trial .w{position:relative;z-index:1;}
+
+/* 最終CTA：薄緑の面ではなく、紺→ティールのダーク帯で締める */
+.cta-sec{
+  background:linear-gradient(120deg,#0b2138 0%,#0d2c40 55%,#07323a 100%);
+  border-top:0;color:#fff;position:relative;overflow:hidden;
+}
+.cta-sec::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(closest-side at 72% 20%,rgba(15,151,168,.3),transparent 68%),
+             radial-gradient(closest-side at 18% 90%,rgba(47,111,208,.22),transparent 70%);
+}
+.cta-sec > .w{position:relative;z-index:1;}
+.cta-sec h2{color:#fff;}
+.cta-sec h2 em{color:var(--c-teal-on-dark);}
+.cta-sec .lead{color:rgba(255,255,255,.68);}
+.cta-sec .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.32);}
+.cta-sec .btn-outline:hover{border-color:var(--c-teal-on-dark);color:var(--c-teal-on-dark);}
+.cta-sec > .w > div:last-child{color:rgba(255,255,255,.45)!important;}
+
+/* ── フッター注記 ── */
+.foot-note{background:var(--bg2);border-top:1px solid var(--border);padding:26px 0;}
+.foot-note p{font-size:12px;color:var(--muted);line-height:1.95;text-align:center;max-width:780px;margin:0 auto;}
+</style>
+</head>
+<body>
+
+<div class="demo-notice">
+  <b>デザインサンプル</b>：このページは制作事例として作られた<b>架空サービス</b>のLPです。社名・サービス名・料金・実績・連絡先はすべて架空で、実在の企業・製品とは関係ありません。
+  <a href="/">制作者のサイトへ</a>
+</div>
+
+<!-- NAV -->
+<nav class="nav"><div class="w">
+  <a href="#top" class="nav-brand">
+    <span class="brand-mark">人</span>
+    <span class="brand-text">{SERVICE}<span>JINRYU SCOPE</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#functions">機能</a>
+    <a href="#pricing">料金</a>
+    <a href="#cases">導入事例</a>
+    <a href="#support">サポート</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#trial" class="btn btn-dark">2週間の無料トライアル</a>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero" id="top"><div class="w">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag">人流データ活用プラットフォーム</div>
+      <h1>その立地、<br><em>本当に人が歩いていますか。</em></h1>
+      <p class="hero-sub">通行量調査は1日だけの点。人流スコープは、<strong>前日までの実測データ</strong>で街と店舗を毎日見続けます。エリアの俯瞰から実勢商圏の分解まで、ブラウザだけで完結します。</p>
+      <div class="hero-actions">
+        <a href="#trial" class="btn btn-gradient" style="font-size:15px;padding:14px 28px;">2週間の無料トライアル</a>
+        <a href="#functions" class="btn btn-outline" style="font-size:15px;padding:14px 28px;">機能を見る</a>
+      </div>
+    </div>
+    <div class="hero-shot">
+      <img src="/demo/mock-map.png" alt="エリア密集マップの分析画面。渋谷駅周辺のメッシュ別来訪密度と時間帯別の来訪推移を表示している" width="1200" height="760" fetchpriority="high" decoding="async">
+    </div>
+  </div>
+
+</div></section>
+
+<!-- 主要指標：ここだけダークの帯にして、白いヒーローとコントラストをつける -->
+<div class="stats-band"><div class="w">
+  <div class="hero-stats">
+    <div><b>前日<i>まで</i></b><span>反映されるデータ。月次レポートを待たずに判断できます</span></div>
+    <div><b>2019<i>年1月〜</i></b><span>さかのぼれる期間。コロナ前との比較もそのまま行えます</span></div>
+    <div><b>500<i>地点</i></b><span>同時に登録・比較できる分析地点（標準プラン）</span></div>
+  </div>
+</div></div>
+
+<!-- アンカーバー -->
+<nav class="anchor-bar"><div class="w">
+  <a href="#functions">機能</a>
+  <a href="#templates">ダッシュボード</a>
+  <a href="#pricing">料金</a>
+  <a href="#cases">導入事例</a>
+  <a href="#support">サポート</a>
+  <a href="#faq">よくある質問</a>
+</div></nav>
+
+<!-- 対応業界（1本の帯） -->
+<div class="chips-band"><div class="w">
+  <span class="chips-lead">導入を想定する業界</span>
+  <div class="chips">{INDUSTRIES.map((n) => <span>{n}</span>)}</div>
+</div></div>
+
+<!-- 課題提起 -->
+<section class="stmt"><div class="w">
+  <h2 class="rv">出店も、販促も、<mark>いまだに勘と足で決まっている</mark>。<br>根拠にできる数字が、手元にないからです。</h2>
+  <div class="stmt-list">
+    <div class="rv">
+      <h3>調査は「その日」しか見ていない</h3>
+      <p>人手による通行量調査は、天候にも曜日にも左右されます。1日の数字を年間の判断に使うには、あまりに心もとない。</p>
+    </div>
+    <div class="rv">
+      <h3>商圏が半径◯kmの仮定のまま</h3>
+      <p>実際の来訪者は、線路や川、坂道で分断されています。円で引いた商圏は、たいてい現実と一致しません。</p>
+    </div>
+    <div class="rv">
+      <h3>施策の効果が測れない</h3>
+      <p>チラシを撒いた。イベントをやった。それで人が増えたのかどうかを、来店数以外の角度から確かめる手段がありません。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- 機能（左右交互） -->
+<section class="sec" id="functions" style="padding-top:0;"><div class="w">
+  <div class="sec-label rv">Functions</div>
+  <h2 class="rv">見る、測る、分解する、決める。</h2>
+  <p class="lead rv">分析を4つの段階に分け、それぞれに専用の画面を用意しています。すべて同じ地点データの上で動くので、途中でツールを乗り換える必要はありません。</p>
+
+  <div class="zig zig--s1 rv" style="margin-top:24px;">
+    <div class="zig-text">
+      <div class="zig-step">STEP 01 ／ 俯瞰</div>
+      <h3>まず、街のどこに人が溜まっているか</h3>
+      <p>125mメッシュ単位の来訪密度を地図に重ねます。候補地の当たりをつける段階で、駅からどちらの方向に人が流れているのかが一目で分かります。</p>
+      <ul class="ck">
+        <li>メッシュ別の来訪密度マップ</li>
+        <li>時間帯・曜日を絞った再集計</li>
+        <li>歩行者・車両の通行量マップ（オプション）</li>
+      </ul>
+    </div>
+    <div class="zig-shot">
+      <img src="/demo/mock-map.png" alt="エリア密集マップ：メッシュ別の来訪密度と上位メッシュの一覧" width="1200" height="760" loading="lazy" decoding="async">
+      <div class="zig-cap">エリア密集マップ ／ 渋谷駅 半径500m</div>
+    </div>
+  </div>
+
+  <div class="zig zig--rev zig--s2 rv">
+    <div class="zig-text">
+      <div class="zig-step">STEP 02 ／ 計測</div>
+      <h3>登録した地点を、毎日追いかける</h3>
+      <p>来訪数・滞在時間を日次で記録し、複数店舗をそのまま並べて比較できます。最大2週間先までの来訪予測も出せるため、シフトや仕入れの計画にも使えます。</p>
+      <ul class="ck">
+        <li>日次・時間帯別の来訪推移／滞在推移</li>
+        <li>男女別・年代別の構成と距離圏別の割合</li>
+        <li>最大2週間先までの来訪予測</li>
+      </ul>
+    </div>
+    <div class="zig-shot">
+      <img src="/demo/mock-trend.png" alt="来訪推移の分析画面：4店舗の日次推移と予測、性別年代構成、距離圏別の割合" width="1200" height="760" loading="lazy" decoding="async">
+      <div class="zig-cap">来訪推移 ／ 4店舗を比較・予測値つき</div>
+    </div>
+  </div>
+
+  <div class="zig zig--s3 rv">
+    <div class="zig-text">
+      <div class="zig-step">STEP 03 ／ 深掘り</div>
+      <h3>商圏は、円ではなく実測で描く</h3>
+      <p>来訪者の居住地分布から商圏を描き直します。地形や鉄道で分断された実態がそのまま出るため、「思っていたより北側から来ていない」といった発見につながります。競合との併用率も同時に見られます。</p>
+      <ul class="ck">
+        <li>居住地別の来訪者数・来訪率マップ</li>
+        <li>競合店との併用率・来訪シェア</li>
+        <li>施策前後の期間比較マップ</li>
+      </ul>
+    </div>
+    <div class="zig-shot">
+      <img src="/demo/mock-area.png" alt="実勢商圏の分析画面：居住地ベースの来訪率分布マップと競合との併用率" width="1200" height="760" loading="lazy" decoding="async">
+      <div class="zig-cap">実勢商圏 ／ 横浜駅前店・競合を重ねて表示</div>
+    </div>
+  </div>
+
+  <div class="zig zig--rev zig--s4 rv">
+    <div class="zig-text">
+      <div class="zig-step">STEP 04 ／ 意思決定</div>
+      <h3>分析で終わらせず、提案書の形にする</h3>
+      <p>用途別のダッシュボードに指標を並べ、そのままPDFで書き出せます。変化点の要約はAIが下書きするので、社内提出の前段階までは自動で進みます。</p>
+      <ul class="ck">
+        <li>出店計画・競合・販促・イベント別のテンプレート</li>
+        <li>定期更新とPDF出力、URLでの共有</li>
+        <li>売上など自社データを取り込んだ統合分析</li>
+      </ul>
+    </div>
+    <div class="zig-shot">
+      <img src="/demo/mock-report.png" alt="レポート画面：出店候補地のスコア比較と曜日×時間帯のヒートマップ、AIによる要約" width="1200" height="760" loading="lazy" decoding="async">
+      <div class="zig-cap">レポート ／ 出店計画ダッシュボード</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 用途別ダッシュボード -->
+<section class="sec" id="templates" style="background:linear-gradient(180deg,#ffffff 0%,#f6fafc 100%);"><div class="w">
+  <h2 class="rv">目的別のダッシュボードを、あらかじめ用意</h2>
+  <p class="lead rv">見たい指標は目的によって変わります。よく使う組み合わせをテンプレートにしてあるので、初回から迷わずに使い始められます。もちろん自分で組み替えることもできます。</p>
+
+  <div class="tpl-grid">
+    <figure class="tpl rv">
+      <div class="tpl-frame"><img src="/demo/mock-report.png" alt="出店計画ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <figcaption><b>出店計画</b><span>候補地を横並びで採点し、勝てる立地を絞る</span></figcaption>
+    </figure>
+    <figure class="tpl rv">
+      <div class="tpl-frame"><img src="/demo/mock-area.png" alt="競合分析ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <figcaption><b>競合分析</b><span>併用率と来訪シェアから、取り合いの構造を見る</span></figcaption>
+    </figure>
+    <figure class="tpl rv">
+      <div class="tpl-frame"><img src="/demo/mock-trend.png" alt="販売促進ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <figcaption><b>販売促進</b><span>施策の前後を日次で比べ、配布エリアを絞り込む</span></figcaption>
+    </figure>
+    <figure class="tpl rv">
+      <div class="tpl-frame"><img src="/demo/mock-map.png" alt="イベント・観光地分析ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <figcaption><b>イベント・観光</b><span>開催前後の人の集まり方を、面で押さえる</span></figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<!-- インバウンド -->
+<section class="sec dark" id="inbound"><div class="w">
+  <div class="inb">
+    <div class="rv">
+      <div class="inb-big">247<small>か国・地域の居住者を判別</small></div>
+    </div>
+    <div class="rv">
+      <h2 style="font-size:clamp(22px,2.8vw,30px);">訪日客と国内在住者を、<br>切り分けて数える。</h2>
+      <p class="lead">同じ場所に立っていても、旅行者と地元の人では打つ手が変わります。居住国別の内訳を日次・時間帯別に確認できるので、観光施策やインバウンド向け販促の効果検証に使えます。</p>
+      <div class="inb-sub">
+        <div><b>42億</b><span>分析対象のID数</span></div>
+        <div><b>日次</b><span>居住国別の更新頻度</span></div>
+        <div><b>時間帯別</b><span>滞在分布の粒度</span></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 料金（比較表） -->
+<section class="sec" id="pricing" style="background:var(--bg2);"><div class="w">
+  <div class="sec-label rv">Pricing</div>
+  <h2 class="rv">料金プラン</h2>
+  <p class="lead rv">2プラン。どちらも<strong>ユーザー数による追加課金はありません</strong>。</p>
+
+  <table class="ptable rv">
+    <thead>
+      <tr class="reco-row">
+        <td></td>
+        <td><div class="bub" style="--m:var(--accent2)"><b>全国300地点以上</b>を横断して見たい企業に</div></td>
+        <td><div class="bub" style="--m:var(--c-blue)"><b>まず1エリアから</b>小さく始めたい企業に</div></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th class="reco plan-h plan-h--g"><span class="pname">人流スコープ</span></th>
+        <th class="lite plan-h plan-h--b"><span class="pname">人流スコープ Lite</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rowlab">月額（税込）</td>
+        <td class="reco"><span class="pprice">¥480,000<small>/月</small></span></td>
+        <td><span class="pprice">¥180,000<small>/月</small></span></td>
+      </tr>
+      <tr><td class="rowlab">ユーザー数</td><td class="reco">無制限</td><td>10ID</td></tr>
+      <tr><td class="rowlab">分析地点（POI）</td><td class="reco">500地点</td><td>200地点</td></tr>
+      <tr><td class="rowlab">来訪トラッキング</td><td class="reco">全6機能</td><td>全6機能</td></tr>
+      <tr><td class="rowlab">深掘り分析</td><td class="reco">14種類</td><td>4種類</td></tr>
+      <tr><td class="rowlab">エリア密集マップ（俯瞰）</td><td class="reco"><span class="yes">対応</span></td><td><span class="no">—</span></td></tr>
+      <tr><td class="rowlab">訪日客分析／通行量マップ</td><td class="reco"><span class="yes">オプション</span></td><td><span class="no">—</span></td></tr>
+      <tr><td class="rowlab">レポート出力・定期更新</td><td class="reco"><span class="yes">対応</span></td><td><span class="yes-b">対応</span></td></tr>
+      <tr class="cta-row">
+        <td class="rowlab">契約期間はいずれも1年から</td>
+        <td class="reco"><a href="#trial" class="btn btn-gradient" style="width:100%;">無料トライアル</a></td>
+        <td><a href="#trial" class="btn btn-outline" style="width:100%;">無料トライアル</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="rv" style="margin-top:18px;font-size:12.5px;color:var(--muted2);line-height:1.9;">
+    過去データは2019年1月分まで遡って参照できます。<br>
+    ※ 上記の金額・条件はデザインサンプル用の架空の設定です。
+  </p>
+</div></section>
+
+<!-- 無料トライアル -->
+<section class="trial" id="trial"><div class="w">
+  <div class="rv">
+    <h2>まず2週間、<br>自社のエリアで試してください。</h2>
+    <p>資料だけでは判断しづらい部分こそ、実際の地点を登録して見ていただくのが早いと考えています。地点の登録はこちらで代行します。見たいエリアを挙げていただくだけで結構です。</p>
+    <div style="margin-top:26px;">
+      <a href="#contact" class="btn btn-gradient" style="font-size:15px;padding:14px 30px;">無料トライアルを申し込む</a>
+    </div>
+  </div>
+  <div class="trial-pts rv">
+    <div>契約時とまったく同じ機能<span>期間中の機能制限はありません</span></div>
+    <div>地点の登録代行つき<span>初期設定はこちらで行います</span></div>
+    <div>期間中もサポート窓口を利用可<span>読み解きのご相談もどうぞ</span></div>
+  </div>
+</div></section>
+
+<!-- 導入事例 -->
+<section class="sec" id="cases"><div class="w">
+  <h2 class="rv">導入事例</h2>
+  <p class="lead rv">導入イメージをつかんでいただくためのサンプル事例です。</p>
+
+  <div class="case-feat rv">
+    <div>
+      <p class="quote">「10か所あった出店候補のうち、2か所は既存店と食い合うことが着手前に分かりました。現地に行く前に落とせたのが大きい」</p>
+      <p class="meta">流通・小売 ／ 店舗開発部 マネージャー</p>
+    </div>
+    <div>
+      <div class="num">約6割</div>
+      <div class="numlab">現地調査にかけていた工数の削減幅。<br>候補地10か所 → 精査対象3か所へ。</div>
+    </div>
+  </div>
+
+  <div class="case-sub">
+    <div class="rv">
+      <h4>配布エリアを3分割して、反応を測った</h4>
+      <p>配布前後の来訪者を居住地別に比較したところ、反応が出たのは3エリアのうち1つだけでした。次回は反応のあったエリアに絞り、配布部数そのものを減らしています。</p>
+      <div class="m">配布部数3割減、来店数は維持（飲食チェーン）</div>
+    </div>
+    <div class="rv">
+      <h4>歩行者空間化の効果を、議会資料の根拠にした</h4>
+      <p>駅前の整備前後で滞在時間と周辺店舗への回遊を計測。定性的な評価しかできなかった部分に、継続して追える数字を持ち込めました。</p>
+      <div class="m">周辺エリアの平均滞在時間 +11分（自治体）</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- サポート -->
+<section class="sec dark" id="support"><div class="w">
+  <h2 class="rv">分析ツールの最大のリスクは、<br>使われなくなることです。</h2>
+  <p class="lead rv">導入して終わりにしないために、定着までの導線を5段階で用意しています。</p>
+  <ul class="sup-list">
+    <li class="rv"><b>01</b><div><h4>メールサポート</h4><p>操作の疑問に営業日中にご返信します</p></div></li>
+    <li class="rv"><b>02</b><div><h4>オンライン相談</h4><p>画面共有で、その場で操作を確認できます</p></div></li>
+    <li class="rv"><b>03</b><div><h4>マニュアル・動画</h4><p>機能別の手順書とQ&amp;Aをいつでも参照できます</p></div></li>
+    <li class="rv"><b>04</b><div><h4>オンボーディング</h4><p>導入初期はハンズオン形式で伴走します</p></div></li>
+    <li class="rv"><b>05</b><div><h4>プレミアム（有償）</h4><p>カスタムレポートの作成まで代行します</p></div></li>
+  </ul>
+</div></section>
+
+<!-- ご利用開始までの流れ -->
+<section class="sec" style="background:var(--bg2);"><div class="w">
+  <h2 class="rv">ご利用開始までの流れ</h2>
+  <p class="lead rv">お問い合わせから利用開始まで、5ステップで進みます。</p>
+
+  <div class="flow-timeline rv">
+    <div class="flow-line"></div>
+    <div class="flow-progress"></div>
+    <div class="flow-step-v2">
+      <div class="fs-num">01</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <div class="fs-title">お問い合わせ</div>
+      <div class="fs-desc">フォームから<br>ご連絡ください</div>
+    </div>
+    <div class="flow-step-v2">
+      <div class="fs-num">02</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+      <div class="fs-title">ヒアリング</div>
+      <div class="fs-desc">見たいエリアと<br>目的を確認</div>
+    </div>
+    <div class="flow-step-v2">
+      <div class="fs-num">03</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="fs-title">トライアル</div>
+      <div class="fs-desc">2週間の<br>お試し利用</div>
+    </div>
+    <div class="flow-step-v2">
+      <div class="fs-num">04</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="fs-title">ご契約</div>
+      <div class="fs-desc">プランと地点数を<br>確定</div>
+    </div>
+    <div class="flow-step-v2">
+      <div class="fs-num">05</div>
+      <div class="fs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <div class="fs-title">利用開始</div>
+      <div class="fs-desc">オンボーディングで<br>定着まで伴走</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="sec" id="faq"><div class="w" style="max-width:800px;">
+  <h2 class="rv">よくあるご質問</h2>
+  <div style="margin-top:22px;" class="rv">
+    {FAQS.map(([q, a]) => (
+      <details class="faq"><summary>{q}</summary><p>{a}</p></details>
+    ))}
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section class="cta-sec" id="contact">
+  <div class="w rv">
+    <h2>その立地の判断、<em>数字で確かめませんか。</em></h2>
+    <p class="lead">見たいエリアを1つ挙げていただければ、こちらで地点を登録してお見せします。導入検討の前段階でのご相談も歓迎です。</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:32px;flex-wrap:wrap;">
+      <a href="#contact" class="btn btn-gradient" style="font-size:15.5px;padding:16px 36px;">無料トライアルを申し込む</a>
+      <a href="#contact" class="btn btn-outline" style="font-size:15.5px;padding:16px 36px;">資料をダウンロード</a>
+    </div>
+    <div style="margin-top:24px;font-size:12.5px;color:var(--muted);">
+      1営業日以内にご返信 ／ オンライン相談可 ／ 契約前のご質問だけでも歓迎
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer><div class="w footer">
+  <div class="footer-logos">
+    <span class="brand-mark">人</span>
+    <span style="font-size:12px;color:var(--muted);font-weight:700;">{SERVICE}（{COMPANY}）</span>
+  </div>
+  <div class="footer-nav">
+    <a href="#functions">機能</a>
+    <a href="#pricing">料金</a>
+    <a href="#cases">導入事例</a>
+    <a href="#support">サポート</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <small>&copy; 2026 {COMPANY}（架空）</small>
+</div></footer>
+
+<div class="foot-note">
+  <div class="w">
+    <p>
+      本ページはLP制作のデザインサンプルです。<strong>「{SERVICE}」「{COMPANY}」および掲載の料金・機能・実績・事例・画面はすべて架空</strong>であり、実在の企業・サービス・製品とは一切関係ありません。<br>
+      構成の参考にした実在サービスの商標・文言・画像は使用していません。制作: <a href="/" style="color:var(--accent);font-weight:700;">福田和弘 / AI業務自動化支援</a>
+    </p>
+  </div>
+</div>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+if (location.search.includes('static')) document.querySelectorAll('.rv').forEach(el => el.classList.add('v'));
+
+const nav = document.querySelector('.nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+</script>
+</body>
+</html>

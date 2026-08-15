@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><link rel="stylesheet" href="mock.css"></head>
+<body style="--m:#d9902b;--m-dark:#a3661a;--m-deep:#8a5514;--m-soft:#fae7c8;--m-pale:#fdf3e3;--m-rgb:217,144,43">
+<nav class="side">
+  <div class="side-logo"><i>人</i><b>人流スコープ</b></div>
+  <div class="side-sec">ANALYSIS</div>
+  <a><s></s>エリア密集マップ</a>
+  <a><s></s>来訪推移</a>
+  <a><s></s>実勢商圏</a>
+  <a><s></s>競合比較</a>
+  <a><s></s>通行量マップ</a>
+  <div class="side-sec">MANAGE</div>
+  <a><s></s>分析地点（POI）</a>
+  <a class="on"><s></s>レポート</a>
+  <a><s></s>設定</a>
+  <div class="side-foot">データ更新<br>2026-08-14 06:12</div>
+</nav>
+
+<div class="main">
+  <div class="top">
+    <div class="crumb">レポート ／ <b>出店計画ダッシュボード</b></div>
+    <div class="top-r"><span class="pill g">自動更新 ON</span><span class="pill">PDF出力</span><span class="pill">共有</span><span class="avatar"></span></div>
+  </div>
+
+  <div class="body">
+    <div class="filters">
+      <span class="f act">テンプレート <b>出店計画用</b></span>
+      <span class="f">対象 <b>候補地 3件</b></span>
+      <span class="f">更新 <b>毎週月曜 8:00</b></span>
+      <span class="btn-s">PDFを生成</span>
+    </div>
+
+    <div class="panel" style="height:96px;">
+      <div class="panel-b" style="display:flex;gap:12px;align-items:center;padding:12px 14px;">
+        <div style="width:34px;height:34px;border-radius:8px;background:#fdf3e3;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#d9902b;font-weight:800;font-size:14px;">AI</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:11px;font-weight:700;color:#8b9bab;letter-spacing:.06em;margin-bottom:2px;">AIアシスタントの要約</div>
+          <div style="font-size:12.5px;line-height:1.7;">候補地Bは平日夕方の通行量が候補地Aを18%上回る一方、休日は逆転しています。既存店との商圏重複は候補地Cが最も低く（8.2%）、カニバリのリスクは限定的です。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="flex:1;min-height:0;">
+      <div class="col" style="flex:1.25;">
+        <div class="panel" style="height:186px;">
+          <div class="panel-h"><h3>候補地スコア比較</h3><span>5指標を偏差値化</span></div>
+          <div class="panel-b">
+            <table>
+              <tr><th>候補地</th><th style="text-align:right">通行量</th><th style="text-align:right">滞在</th><th style="text-align:right">商圏人口</th><th style="text-align:right">重複</th><th style="text-align:right">総合</th></tr>
+              <tr><td>A：駅北口 徒歩2分</td><td class="n">68</td><td class="n">54</td><td class="n">71</td><td class="n dn">22.4%</td><td class="n">62.1</td></tr>
+              <tr><td>B：中央通り沿い</td><td class="n up">74</td><td class="n">61</td><td class="n">66</td><td class="n dn">17.8%</td><td class="n up">66.8</td></tr>
+              <tr><td>C：南口ロータリー</td><td class="n">57</td><td class="n up">72</td><td class="n">58</td><td class="n up">8.2%</td><td class="n">63.4</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel" style="flex:1;min-height:0;">
+          <div class="panel-h"><h3>曜日×時間帯 来訪ヒートマップ</h3><span>候補地B</span></div>
+          <div class="panel-b" style="display:flex;gap:10px;">
+            <div style="display:grid;grid-template-rows:14px repeat(7,1fr);gap:3px;font-size:9px;color:#9aa9b8;text-align:right;align-items:center;">
+              <span></span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span><span>日</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;">
+              <div style="display:flex;gap:3px;font-size:9px;color:#9aa9b8;height:14px;margin-bottom:3px;">
+                <span style="flex:1;text-align:center">8</span><span style="flex:1;text-align:center">10</span><span style="flex:1;text-align:center">12</span><span style="flex:1;text-align:center">14</span><span style="flex:1;text-align:center">16</span><span style="flex:1;text-align:center">18</span><span style="flex:1;text-align:center">20</span><span style="flex:1;text-align:center">22</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(7,1fr);gap:3px;flex:1;min-height:0;">
+                <i style="background:#fdf7ec"></i><i style="background:#fae7c8"></i><i style="background:#f5d3a0"></i><i style="background:#f5d3a0"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#ecb463"></i>
+                <i style="background:#fdf7ec"></i><i style="background:#fae7c8"></i><i style="background:#f5d3a0"></i><i style="background:#ecb463"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#ecb463"></i>
+                <i style="background:#fdf7ec"></i><i style="background:#fae7c8"></i><i style="background:#f5d3a0"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#f5d3a0"></i>
+                <i style="background:#fdf7ec"></i><i style="background:#f5d3a0"></i><i style="background:#f5d3a0"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#a3661a"></i><i style="background:#f5d3a0"></i>
+                <i style="background:#fae7c8"></i><i style="background:#f5d3a0"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#a3661a"></i><i style="background:#a3661a"></i><i style="background:#d9902b"></i>
+                <i style="background:#fae7c8"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#a3661a"></i><i style="background:#d9902b"></i><i style="background:#ecb463"></i><i style="background:#f5d3a0"></i>
+                <i style="background:#fae7c8"></i><i style="background:#ecb463"></i><i style="background:#d9902b"></i><i style="background:#a3661a"></i><i style="background:#d9902b"></i><i style="background:#ecb463"></i><i style="background:#f5d3a0"></i><i style="background:#fae7c8"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:.78;">
+        <div class="panel" style="height:150px;">
+          <div class="panel-h"><h3>推奨</h3><span>総合スコア</span></div>
+          <div class="panel-b" style="display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-size:11px;color:#8b9bab;font-weight:700;">最有力候補</div>
+            <div style="font-size:26px;font-weight:800;letter-spacing:-.02em;margin:2px 0 4px;">候補地B</div>
+            <div style="font-size:11.5px;color:#5c6f82;line-height:1.7;">平日夕方の通行量が最大。<br>商圏重複は中程度。</div>
+          </div>
+        </div>
+        <div class="panel" style="flex:1;">
+          <div class="panel-h"><h3>月次の来訪見込み</h3><span>候補地B</span></div>
+          <div class="panel-b" style="display:flex;flex-direction:column;">
+            <div class="bars">
+              <i class="pale" style="height:52%"></i><i class="pale" style="height:58%"></i><i class="pale" style="height:54%"></i>
+              <i style="height:66%"></i><i style="height:72%"></i><i style="height:69%"></i><i style="height:81%"></i><i style="height:88%"></i><i style="height:100%"></i>
+            </div>
+            <div class="xlab"><span>4月</span><span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span><span>12月</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>
