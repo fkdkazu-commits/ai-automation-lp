@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      # Pages が未設定なら有効化する（enablement: true）。設定済みなら何もしない
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
       # npm install → astro build → dist/ を Pages 用アーティファクトとしてアップロードまで行う
       - name: Build with Astro
         uses: withastro/action@v3
