@@ -3,7 +3,8 @@
 既存の [ai-consulting-lp](https://fkdkazu-commits.github.io/ai-consulting-lp/)（GitHub Pages / 素のHTML）をベースに、
 `pro-lp-builder` スキルのプロ品質テンプレートで作り直したワンページLPです。
 
-- 技術構成: **Astro 5（static出力） + Vercel**
+- 公開URL: **https://fkdkazu-commits.github.io/ai-automation-lp/**
+- 技術構成: **Astro 5（static出力） + GitHub Pages**（`main` への push で GitHub Actions が自動デプロイ）
 - フォント: Noto Sans JP（Google Fonts / CDN）
 - 配色: **テラコッタ（暖色・`--accent:#d4622a`）** — pro-lp-builder テンプレート既定のトーン
 
@@ -15,8 +16,10 @@
 
 ```
 pro-lp-builder/
-├── astro.config.mjs        # site（公開URL）・sitemap
-├── vercel.json             # セキュリティヘッダ / CSP / キャッシュ / リダイレクト
+├── .github/workflows/
+│   └── deploy.yml          # main への push で GitHub Pages へ自動デプロイ
+├── astro.config.mjs        # site（Pagesドメイン）・base（リポジトリ名）・sitemap
+├── vercel.json             # ★現在は未使用（Vercelへ移す場合のセキュリティヘッダ設定）
 ├── package.json
 ├── public/
 │   ├── ogp.png             # OGP画像 1200×630（scripts/ogp.html から生成）
@@ -96,18 +99,58 @@ EDGE="/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
 
 ファビコンは `scripts/icon.html` を同じ方法で 32 / 180 / 192 のウィンドウサイズで撮影します。
 
-## 公開URLを変えるとき
+## 公開先とURLの仕組み
 
-公開ドメインが確定したら、以下の **3か所** を同じ値に揃えてください。
+GitHub Pages の**プロジェクトページ**として公開しているため、URLは `オーナーのPagesドメイン + リポジトリ名` になります。
 
-| ファイル | 箇所 |
+| ファイル | 値 |
 |---|---|
-| `src/pages/index.astro` | frontmatter の `SITE_URL` |
-| `astro.config.mjs` | `site` |
-| `vercel.json` | `/` の `Link`（canonical）ヘッダ |
+| `astro.config.mjs` | `site: 'https://fkdkazu-commits.github.io'` / `base: '/ai-automation-lp'` |
+| `src/pages/index.astro` | `SITE_URL = 'https://fkdkazu-commits.github.io/ai-automation-lp'`（canonical / OGP / JSON-LD で使用） |
 | `public/robots.txt` | `Sitemap:` の行 |
+| `public/site.webmanifest` | `start_url` とアイコン3つのパス（**静的ファイルなので base を直書き**） |
 
-現在は仮値 `https://ai-automation-lp.vercel.app` が入っています。
+### `${BASE}` を必ず付ける
+
+`public/` 配下の画像・アイコンは **Astro が自動でリライトしません**。サブパス公開ではパスが壊れるため、
+各ページの frontmatter で
+
+```js
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+```
+
+を定義し、`src={`${BASE}/images/profile.png`}` の形で参照しています。**新しい画像を足すときも同じ形にすること。**
+
+### 独自ドメインに移す場合
+
+1. `astro.config.mjs` の `site` をそのドメインにし、**`base` の行を削除**（`BASE` は空文字になり、コードはそのまま動きます）
+2. `src/pages/index.astro` の `SITE_URL`、`public/robots.txt`、`public/site.webmanifest` を新ドメインに
+3. リポジトリに `public/CNAME`（ドメイン名1行）を追加し、DNSに CNAME レコードを設定
+
+### Vercel に移す場合
+
+`vercel.json` にセキュリティヘッダ一式が入っているので、そのまま使えます。
+その際は各ページの `<meta http-equiv="Content-Security-Policy">` と `<meta name="referrer">` を削除してください
+（ヘッダ側と二重になるため）。
+
+> ただし **Vercel の無料 Hobby プランは非商用向け**とされています。集客用LPは商用に該当する可能性が高いため、
+> 移行する場合は Pro プランの要否を確認してください。
+
+## GitHub Pages の制約（把握しておくこと）
+
+Pages は**カスタムHTTPヘッダを設定できません**。そのため `vercel.json` の設定のうち以下が効きません。
+
+| 設定 | 現状の対応 |
+|---|---|
+| CSP | 各ページの `<meta http-equiv="Content-Security-Policy">` で代替（`frame-ancestors` は meta では無効） |
+| Referrer-Policy | `<meta name="referrer">` で代替 |
+| **X-Frame-Options / Permissions-Policy / COOP / CORP** | **代替手段なし**（クリックジャッキング対策は未適用） |
+| HSTS | `github.io` は HSTS preload 済みのため実質カバーされる |
+| 画像の長期キャッシュ（immutable 1年） | 不可。Pages 既定の10分 |
+| リダイレクト（`/index.html` → `/` 等） | 不可 |
+
+フォーム送信やログインを持たない静的LPのため実害は限定的ですが、
+ヘッダが必要になったら Vercel か Cloudflare Pages（`_headers` でヘッダ設定可・無料で商用可）への移行を検討してください。
 
 ## 元サイトからの変更点（意図的なもの）
 
@@ -193,7 +236,8 @@ EDGE="/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
 
 ## 残タスク
 
-- [ ] 公開ドメインの確定（上記4か所の差し替え）
-- [ ] Vercelへのデプロイ（GitHub連携 or `vercel --prod`）
+- [x] 公開先の決定（GitHub Pages）とURL確定
+- [x] GitHub Actions による自動デプロイの設定
 - [ ] お問合せフォームを本LP内に持たせるかの判断（現状は既存 `contact.html` へ遷移）
-- [ ] アクセス解析の要否（元サイトはMicrosoft Clarityを導入。入れる場合はCSPに許可を追加）
+- [ ] アクセス解析の要否（元サイトはMicrosoft Clarityを導入。**入れる場合は各ページの CSP meta に許可を追加**）
+- [ ] 独自ドメインの取得可否（取得する場合は上記「独自ドメインに移す場合」の3手順）

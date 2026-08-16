@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ai-automation-lp.vercel.app/sitemap-index.xml
+Sitemap: https://fkdkazu-commits.github.io/ai-automation-lp/sitemap-index.xml

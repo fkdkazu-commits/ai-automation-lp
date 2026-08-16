@@ -9,6 +9,9 @@
 // ─────────────────────────────────────────────────────────────
 import '../../styles/saas-base.css';
 
+// GitHub Pages のサブパス（例 /ai-automation-lp）。public/ 配下の参照は必ず `${BASE}/…` にする。
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const SERVICE = '人流スコープ';
 const COMPANY = '株式会社ジオリンクス';
 const TITLE = '人流スコープ｜街の人流と実勢商圏を可視化する人流データ分析プラットフォーム【デザインサンプル】';
@@ -34,15 +37,18 @@ const FAQS = [
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#0b2138">
 <meta name="robots" content="noindex,nofollow">
+<!-- GitHub Pages はカスタムHTTPヘッダを設定できないため、meta で代替できる分だけ入れている -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <title>{TITLE}</title>
 <meta name="description" content={DESC}>
 <meta property="og:type" content="website">
 <meta property="og:title" content={TITLE}>
 <meta property="og:description" content={DESC}>
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="32x32" href={`${BASE}/favicon-32.png`}>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="/demo/mock-map.png" fetchpriority="high">
+<link rel="preload" as="image" href={`${BASE}/demo/mock-map.png`} fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══ このページ固有のスタイル（共通トークンは saas-base.css） ═══ */
@@ -396,7 +402,7 @@ const FAQS = [
 
 <div class="demo-notice">
   <b>デザインサンプル</b>：このページは制作事例として作られた<b>架空サービス</b>のLPです。社名・サービス名・料金・実績・連絡先はすべて架空で、実在の企業・製品とは関係ありません。
-  <a href="/">制作者のサイトへ</a>
+  <a href={`${BASE}/`}>制作者のサイトへ</a>
 </div>
 
 <!-- NAV -->
@@ -428,7 +434,7 @@ const FAQS = [
       </div>
     </div>
     <div class="hero-shot">
-      <img src="/demo/mock-map.png" alt="エリア密集マップの分析画面。渋谷駅周辺のメッシュ別来訪密度と時間帯別の来訪推移を表示している" width="1200" height="760" fetchpriority="high" decoding="async">
+      <img src={`${BASE}/demo/mock-map.png`} alt="エリア密集マップの分析画面。渋谷駅周辺のメッシュ別来訪密度と時間帯別の来訪推移を表示している" width="1200" height="760" fetchpriority="high" decoding="async">
     </div>
   </div>
 
@@ -496,7 +502,7 @@ const FAQS = [
       </ul>
     </div>
     <div class="zig-shot">
-      <img src="/demo/mock-map.png" alt="エリア密集マップ：メッシュ別の来訪密度と上位メッシュの一覧" width="1200" height="760" loading="lazy" decoding="async">
+      <img src={`${BASE}/demo/mock-map.png`} alt="エリア密集マップ：メッシュ別の来訪密度と上位メッシュの一覧" width="1200" height="760" loading="lazy" decoding="async">
       <div class="zig-cap">エリア密集マップ ／ 渋谷駅 半径500m</div>
     </div>
   </div>
@@ -513,7 +519,7 @@ const FAQS = [
       </ul>
     </div>
     <div class="zig-shot">
-      <img src="/demo/mock-trend.png" alt="来訪推移の分析画面：4店舗の日次推移と予測、性別年代構成、距離圏別の割合" width="1200" height="760" loading="lazy" decoding="async">
+      <img src={`${BASE}/demo/mock-trend.png`} alt="来訪推移の分析画面：4店舗の日次推移と予測、性別年代構成、距離圏別の割合" width="1200" height="760" loading="lazy" decoding="async">
       <div class="zig-cap">来訪推移 ／ 4店舗を比較・予測値つき</div>
     </div>
   </div>
@@ -530,7 +536,7 @@ const FAQS = [
       </ul>
     </div>
     <div class="zig-shot">
-      <img src="/demo/mock-area.png" alt="実勢商圏の分析画面：居住地ベースの来訪率分布マップと競合との併用率" width="1200" height="760" loading="lazy" decoding="async">
+      <img src={`${BASE}/demo/mock-area.png`} alt="実勢商圏の分析画面：居住地ベースの来訪率分布マップと競合との併用率" width="1200" height="760" loading="lazy" decoding="async">
       <div class="zig-cap">実勢商圏 ／ 横浜駅前店・競合を重ねて表示</div>
     </div>
   </div>
@@ -547,7 +553,7 @@ const FAQS = [
       </ul>
     </div>
     <div class="zig-shot">
-      <img src="/demo/mock-report.png" alt="レポート画面：出店候補地のスコア比較と曜日×時間帯のヒートマップ、AIによる要約" width="1200" height="760" loading="lazy" decoding="async">
+      <img src={`${BASE}/demo/mock-report.png`} alt="レポート画面：出店候補地のスコア比較と曜日×時間帯のヒートマップ、AIによる要約" width="1200" height="760" loading="lazy" decoding="async">
       <div class="zig-cap">レポート ／ 出店計画ダッシュボード</div>
     </div>
   </div>
@@ -560,19 +566,19 @@ const FAQS = [
 
   <div class="tpl-grid">
     <figure class="tpl rv">
-      <div class="tpl-frame"><img src="/demo/mock-report.png" alt="出店計画ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <div class="tpl-frame"><img src={`${BASE}/demo/mock-report.png`} alt="出店計画ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
       <figcaption><b>出店計画</b><span>候補地を横並びで採点し、勝てる立地を絞る</span></figcaption>
     </figure>
     <figure class="tpl rv">
-      <div class="tpl-frame"><img src="/demo/mock-area.png" alt="競合分析ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <div class="tpl-frame"><img src={`${BASE}/demo/mock-area.png`} alt="競合分析ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
       <figcaption><b>競合分析</b><span>併用率と来訪シェアから、取り合いの構造を見る</span></figcaption>
     </figure>
     <figure class="tpl rv">
-      <div class="tpl-frame"><img src="/demo/mock-trend.png" alt="販売促進ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <div class="tpl-frame"><img src={`${BASE}/demo/mock-trend.png`} alt="販売促進ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
       <figcaption><b>販売促進</b><span>施策の前後を日次で比べ、配布エリアを絞り込む</span></figcaption>
     </figure>
     <figure class="tpl rv">
-      <div class="tpl-frame"><img src="/demo/mock-map.png" alt="イベント・観光地分析ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
+      <div class="tpl-frame"><img src={`${BASE}/demo/mock-map.png`} alt="イベント・観光地分析ダッシュボードの画面" width="1200" height="760" loading="lazy" decoding="async"></div>
       <figcaption><b>イベント・観光</b><span>開催前後の人の集まり方を、面で押さえる</span></figcaption>
     </figure>
   </div>
@@ -786,7 +792,7 @@ const FAQS = [
   <div class="w">
     <p>
       本ページはLP制作のデザインサンプルです。<strong>「{SERVICE}」「{COMPANY}」および掲載の料金・機能・実績・事例・画面はすべて架空</strong>であり、実在の企業・サービス・製品とは一切関係ありません。<br>
-      構成の参考にした実在サービスの商標・文言・画像は使用していません。制作: <a href="/" style="color:var(--accent);font-weight:700;">福田和弘 / AI業務自動化支援</a>
+      構成の参考にした実在サービスの商標・文言・画像は使用していません。制作: <a href={`${BASE}/`} style="color:var(--accent);font-weight:700;">福田和弘 / AI業務自動化支援</a>
     </p>
   </div>
 </div>

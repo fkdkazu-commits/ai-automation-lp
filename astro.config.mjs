@@ -1,10 +1,14 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// 公開URL。独自ドメイン確定後は src/pages/index.astro の SITE_URL と
-// vercel.json の Link ヘッダも同じ値に揃えること。
+// 公開先は GitHub Pages（プロジェクトページ）。
+//   site … オーナーのPagesドメイン
+//   base … リポジトリ名。公開URLは site + base になる
+// 独自ドメインに移す場合は site をそのドメインにし、base を削除する。
+// 変更したら src/pages/index.astro の SITE_URL と public/robots.txt も合わせること。
 export default defineConfig({
-  site: 'https://ai-automation-lp.vercel.app',
+  site: 'https://fkdkazu-commits.github.io',
+  base: '/ai-automation-lp',
   output: 'static',
   trailingSlash: 'never',
   build: { format: 'directory', inlineStylesheets: 'auto' },

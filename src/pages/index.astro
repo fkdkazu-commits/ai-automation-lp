@@ -6,9 +6,14 @@ import '../styles/lp-base.css';
 
 // ─────────────────────────────────────────────────────────────
 // 公開URLはここ1か所だけ変更すれば canonical / OGP / JSON-LD に反映されます。
-// 独自ドメイン確定後は astro.config.mjs の site と vercel.json の Link ヘッダも合わせてください。
+// 変更したら astro.config.mjs の site + base と public/robots.txt も合わせてください。
+//
+// BASE は GitHub Pages のプロジェクトページ用のサブパス（例 /ai-automation-lp）。
+// public/ 配下の画像・アイコンは Astro が自動でリライトしないため、
+// 必ず `${BASE}/…` の形で参照すること（独自ドメインに移せば空文字になり、そのまま動きます）。
 // ─────────────────────────────────────────────────────────────
-const SITE_URL = 'https://ai-automation-lp.vercel.app';
+const SITE_URL = 'https://fkdkazu-commits.github.io/ai-automation-lp';
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const X_URL = 'https://x.com/Marketer_kazuf';
 const X_HANDLE = '@Marketer_kazuf';
 const MAIL = 'fkdkazu@gmail.com';
@@ -91,13 +96,18 @@ const jsonLd = {
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#1a1714">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<!-- GitHub Pages はカスタムHTTPヘッダを設定できないため、meta で代替できる分だけ入れている。
+     X-Frame-Options / frame-ancestors / Permissions-Policy / COOP は meta では効かない（既知の制約）。
+     Vercel 等ヘッダを設定できる環境へ移す場合は vercel.json 側に寄せ、この2行は削ってよい。 -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="author" content="福田 和弘">
 <meta name="keywords" content="AI業務自動化,Claude Code,Claude Code 開発代行,AI顧問,業務効率化,DX推進,中小企業 DX,AWS,SEO自動化,福田和弘">
 <link rel="canonical" href={`${SITE_URL}/`}>
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href={`${BASE}/favicon-32.png`}>
+<link rel="icon" type="image/png" sizes="192x192" href={`${BASE}/icon-192.png`}>
+<link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/apple-touch-icon.png`}>
+<link rel="manifest" href={`${BASE}/site.webmanifest`}>
 <title>{TITLE}</title>
 <meta name="description" content={DESC}>
 <meta property="og:type" content="website">
@@ -120,7 +130,7 @@ const jsonLd = {
 <meta name="twitter:image:alt" content="AI業務自動化支援 福田和弘 — Claude Code × AWS">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="/images/marketing-dashboard-sample.png" type="image/png" fetchpriority="high">
+<link rel="preload" as="image" href={`${BASE}/images/marketing-dashboard-sample.png`} type="image/png" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
 <style>
@@ -239,8 +249,6 @@ const jsonLd = {
 .btn-x:hover{background:#222;transform:translateY(-1px);}
 </style>
 
-<script defer src="/_vercel/insights/script.js"></script>
-<script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
 
@@ -278,7 +286,7 @@ const jsonLd = {
       </div>
     </div>
     <div class="hero-visual">
-      <img src="/images/marketing-dashboard-sample.png" alt="AIが商談メモを解析し、5軸診断と改善提案を自動生成するマーケティングAIダッシュボードの画面" fetchpriority="high" decoding="async" width="1536" height="1024">
+      <img src={`${BASE}/images/marketing-dashboard-sample.png`} alt="AIが商談メモを解析し、5軸診断と改善提案を自動生成するマーケティングAIダッシュボードの画面" fetchpriority="high" decoding="async" width="1536" height="1024">
       <div class="hero-badge hb1"><div class="num">80%</div><div class="lbl">SEO記事制作コスト削減</div></div>
       <div class="hero-badge hb2"><div class="num">20年+</div><div class="lbl">ITマネジメント経験</div></div>
     </div>
@@ -560,7 +568,7 @@ const jsonLd = {
 
   <div class="sc-grid">
     <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-consulting-lp/marketing-ai-dashboard.html" target="_blank" rel="noopener noreferrer">
-      <div class="sc-thumb"><img src="/images/marketing-dashboard-sample.png" alt="マーケティングAIダッシュボードの診断画面" loading="lazy"></div>
+      <div class="sc-thumb"><img src={`${BASE}/images/marketing-dashboard-sample.png`} alt="マーケティングAIダッシュボードの診断画面" loading="lazy"></div>
       <div class="sc-body">
         <span class="sc-cat">マーケティング</span>
         <h4 class="sc-title">マーケティングAIダッシュボード</h4>
@@ -590,7 +598,7 @@ const jsonLd = {
     </a>
 
     <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-efficiency-article/hearing-mock.html" target="_blank" rel="noopener noreferrer">
-      <div class="sc-thumb"><img src="/news/news-hearing-mock.png" alt="AIヒアリングからモックアップを自動生成するツール" loading="lazy"></div>
+      <div class="sc-thumb"><img src={`${BASE}/news/news-hearing-mock.png`} alt="AIヒアリングからモックアップを自動生成するツール" loading="lazy"></div>
       <div class="sc-body">
         <span class="sc-cat">営業・提案</span>
         <h4 class="sc-title">AIヒアリング〜モックアップ自動生成</h4>
@@ -600,7 +608,7 @@ const jsonLd = {
     </a>
 
     <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-consulting-lp/hands-free-dev.html" target="_blank" rel="noopener noreferrer">
-      <div class="sc-thumb"><img src="/news/news-unia.png" alt="ハンズフリーAI開発チーム UNIA" loading="lazy"></div>
+      <div class="sc-thumb"><img src={`${BASE}/news/news-unia.png`} alt="ハンズフリーAI開発チーム UNIA" loading="lazy"></div>
       <div class="sc-body">
         <span class="sc-cat">開発環境</span>
         <h4 class="sc-title">ハンズフリーAI開発チーム（UNIA）</h4>
@@ -610,7 +618,7 @@ const jsonLd = {
     </a>
 
     <a class="sc-card rv" href="https://fkdkazu-commits.github.io/ai-efficiency-article/crm-initial-build.html" target="_blank" rel="noopener noreferrer">
-      <div class="sc-thumb"><img src="/news/news-crm.png" alt="クラウドCRM 初期構築（BtoB商社）" loading="lazy"></div>
+      <div class="sc-thumb"><img src={`${BASE}/news/news-crm.png`} alt="クラウドCRM 初期構築（BtoB商社）" loading="lazy"></div>
       <div class="sc-body">
         <span class="sc-cat">CRM・営業管理</span>
         <h4 class="sc-title">クラウドCRM 初期構築（BtoB商社）</h4>
@@ -640,37 +648,37 @@ const jsonLd = {
 
   <div class="news-grid" id="newsGrid">
     <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/hands-free-dev.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
-      <img class="news-thumb-img" src="/news/news-unia.png" alt="ハンズフリーAI開発チーム（UNIA）" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-unia.png`} alt="ハンズフリーAI開発チーム（UNIA）" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.8.15</span>
       <div class="news-card-title">ハンズフリーAI開発チーム（UNIA）の紹介ページを公開しました</div>
     </a>
     <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/crm-initial-build.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
-      <img class="news-thumb-img" src="/news/news-crm.png" alt="クラウドCRM 初期構築（BtoB商社）" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-crm.png`} alt="クラウドCRM 初期構築（BtoB商社）" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.7.29</span>
       <div class="news-card-title">クラウドCRM 初期構築（BtoB商社）の実績ページを公開しました</div>
     </a>
     <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/retainer.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
-      <img class="news-thumb-img" src="/news/news-retainer.png" alt="Claude Code 業務委託支援" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-retainer.png`} alt="Claude Code 業務委託支援" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.7.27</span>
       <div class="news-card-title">Claude Code 業務委託支援のサービス詳細ページを公開しました</div>
     </a>
     <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/youtube-note-generator.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
-      <img class="news-thumb-img" src="/news/news-youtube-note.png" alt="YouTube → note 記事自動生成" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-youtube-note.png`} alt="YouTube → note 記事自動生成" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.7.24</span>
       <div class="news-card-title">YouTube → note 記事自動生成ツールの実績ページを公開しました</div>
     </a>
     <a href="https://fkdkazu-commits.github.io/ai-consulting-lp/retainer.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
-      <img class="news-thumb-img" src="/news/news-referral.png" alt="月額顧問契約・ご紹介キャッシュバック制度" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-referral.png`} alt="月額顧問契約・ご紹介キャッシュバック制度" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.7.15</span>
       <div class="news-card-title">Claude Code 業務委託支援（月額顧問契約・ご紹介キャッシュバック制度あり）を開始しました</div>
     </a>
     <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/wp-auto-insert.html" target="_blank" rel="noopener noreferrer" class="news-card rv">
-      <img class="news-thumb-img" src="/news/news-wp-link.png" alt="WordPress 内部リンク自動挿入" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-wp-link.png`} alt="WordPress 内部リンク自動挿入" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.7.12</span>
       <div class="news-card-title">WordPress内部リンク自動挿入ツールの実績ページを公開しました</div>
     </a>
     <a href="https://fkdkazu-commits.github.io/ai-efficiency-article/hearing-mock.html" target="_blank" rel="noopener noreferrer" class="news-card is-hidden">
-      <img class="news-thumb-img" src="/news/news-hearing-mock.png" alt="AIヒアリング → モックアップ自動生成" loading="lazy" width="720" height="514">
+      <img class="news-thumb-img" src={`${BASE}/news/news-hearing-mock.png`} alt="AIヒアリング → モックアップ自動生成" loading="lazy" width="720" height="514">
       <span class="news-card-date">2026.7.12</span>
       <div class="news-card-title">AIヒアリング〜モックアップ自動生成ツールの実績ページを公開しました</div>
     </a>
@@ -711,7 +719,7 @@ const jsonLd = {
 <section class="prof-band" id="profile"><div class="w">
   <div class="prof-grid">
     <div class="rv">
-      <div class="prof-avatar"><img src="/images/profile.png" alt="福田和弘" loading="lazy" width="520" height="520"></div>
+      <div class="prof-avatar"><img src={`${BASE}/images/profile.png`} alt="福田和弘" loading="lazy" width="520" height="520"></div>
     </div>
     <div class="rv">
       <div class="sec-label">Profile</div>
